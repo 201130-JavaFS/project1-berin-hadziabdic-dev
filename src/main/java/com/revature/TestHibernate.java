@@ -1,8 +1,5 @@
 package com.revature;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-
 import com.revature.ModelLayer.Entities.RecieptEntity;
 import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.ReceiptEntityRepository;

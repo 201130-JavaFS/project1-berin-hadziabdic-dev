@@ -24,7 +24,13 @@ public class LogoutServlet extends AbstractExceptionBoundaryHttpServlet implemen
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) {
-        this.exceptionBoundary.ExceptionBoundaryService(req, res, this);
+        boolean operationSuccess = this.exceptionBoundary.ExceptionBoundaryService(req, res, this);
+
+        if (operationSuccess)
+            res.setStatus(200);
+        else if (res.getStatus() < 500) // if there wasn't an internal server error (exception)
+            res.setStatus(400); // then
+
     }
 
     /**

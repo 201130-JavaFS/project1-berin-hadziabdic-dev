@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.revature.API.AppAPI;
 import com.revature.ModelLayer.DTO.UserDTO;
 import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.UserEntityRepository;
@@ -36,14 +37,20 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
     public Boolean webServe(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         UserDTO loginData = new UserDTO(req);
-        Boolean authenticated = authenticate(loginData);
+        Boolean authenticated = false;
+        String endPoint = req.getRequestURI();
 
-        if (authenticated) {
-            HttpSession userSession = req.getSession(true);
-            userSession.setMaxInactiveInterval(86400); // sessions last a day.
-         
-              }
-        
+        // if we are logging the user in.
+        if (endPoint.equals(AppAPI.LOGIN_USER)) {
+            authenticated = authenticateUserCredentials(loginData);
+            if (authenticated) {
+                HttpSession userSession = req.getSession(true);
+                userSession.setMaxInactiveInterval(86400); // sessions last a day.
+            }
+        } else {
+
+        }
+
         return authenticated;
     }
 
@@ -56,7 +63,7 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
      *         password. Otherwise, returns false.
      */
 
-    private boolean authenticate(UserDTO dto) {
+    private boolean authenticateUserCredentials(UserDTO dto) {
         UserEntity entity = null;
         boolean authenticated = false;
         boolean validDTO = dto != null && dto.username != null && dto.password != null && dto.username.length() > 0
@@ -75,6 +82,26 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
         }
 
         return authenticated;
+    }
+
+    public boolean authenticateSession(HttpServletRequest req) throws IOException {
+
+        String usernameOfSessionUserFromRequest = new UserDTO(req).username;
+        HttpSession sessionObtainedFromRequet = req.getSession();
+        String sessionObjectUsernameAttribute = null;
+        Boolean authenticSession = usernameOfSessionUserFromRequest != null
+                && usernameOfSessionUserFromRequest.length() > 0 && sessionObtainedFromRequet != null;
+
+        if (authenticSession) {
+            sessionObjectUsernameAttribute = sessionObtainedFromRequet.getAttribute("username").toString();
+            authenticSession = usernameOfSessionUserFromRequest.equals(sessionObjectUsernameAttribute);
+        }
+        return authenticSession;
+    }
+
+    public boolean authenticateUserAccountPermissions(HttpServletRequest req) {
+hgkgj
+        return false;
     }
 
 }

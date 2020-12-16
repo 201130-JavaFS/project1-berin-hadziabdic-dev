@@ -12,10 +12,10 @@ public class CreateReimbursmentRequestServlet extends AbstractExceptionBoundaryH
      *
      */
     private static final long serialVersionUID = 1L;
-    private WebService<Boolean> recieptService;
+    private static WebService<Boolean> recieptService = new RecieptService();
 
     public CreateReimbursmentRequestServlet() {
-        this.recieptService = new RecieptService();
+        super();
     }
 
     @Override
