@@ -1,16 +1,21 @@
 package com.revature.ModelLayer.Entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import com.revature.ModelLayer.DTO.UserDTO;
+import com.revature.ModelLayer.DTO.Exceptions.InvalidEntityToDTOConversionException;
 import com.revature.ModelLayer.NamedQueries.QueryBank;
 
-@NamedQueries({
-        @NamedQuery(name = QueryBank.FIND_BY_USERNAME_AND_PASSWORD, query = QueryBank.FIND_BY_USERNAME_AND_PASSWORD_HQL) })
-@Entity(name = "ers_user")
+@NamedQueries({ @NamedQuery(name = QueryBank.FIND_BY_USERNAME, query = QueryBank.FIND_BY_USERNAME_JPA_QUERY),
+        @NamedQuery(name = QueryBank.DELETE_BY_USERNAME, query = QueryBank.DELETE_BY_USERNAME_JPA_QUERY), })
+
+@Entity(name = "ers_users")
 @Table(name = "ers_users")
 public class UserEntity {
 
@@ -23,20 +28,47 @@ public class UserEntity {
      */
 
     @Id
-    private int users_id;
+    @Column(columnDefinition = "serial ")
+    @GeneratedValue
+    private Integer ers_users_id;
+    @Column(columnDefinition = "text")
     private String ers_username;
+    @Column(columnDefinition = "text")
     private String ers_password;
+    @Column(columnDefinition = "text")
     private String user_first_name;
+    @Column(columnDefinition = "text")
     private String user_last_name;
+    @Column(columnDefinition = "text")
     private String user_email;
-    private int user_rold_id;
+    @Column(columnDefinition = "serial")
+    private int user_role_id;
 
-    public int getUsers_id() {
-        return this.users_id;
+    public UserEntity(UserDTO createUserDTO) throws InvalidEntityToDTOConversionException {
+
+        boolean validUsername = createUserDTO.username != null && createUserDTO.username.length() > 0;
+        boolean validPassword = createUserDTO.password != null & createUserDTO.password.length() != 0;
+        boolean validEmail = createUserDTO.email != null & createUserDTO.email.length() != 0;
+
+        if (validUsername && validPassword && validEmail) {
+            this.ers_username = createUserDTO.username;
+            this.ers_password = createUserDTO.password;
+            this.user_email = createUserDTO.email;
+            this.user_role_id = 1; // new users are automatically given the title employee
+        }
+
     }
 
-    public void setUsers_id(int users_id) {
-        this.users_id = users_id;
+    public UserEntity() {
+        super();
+    }
+
+    public Integer getErs_users_id() {
+        return this.ers_users_id;
+    }
+
+    public void setErs_users_id(int ers_users_id) {
+        this.ers_users_id = ers_users_id;
     }
 
     public String getErs_username() {
@@ -79,12 +111,12 @@ public class UserEntity {
         this.user_email = user_email;
     }
 
-    public int getUser_rold_id() {
-        return this.user_rold_id;
+    public int getUser_role_id() {
+        return this.user_role_id;
     }
 
-    public void setUser_rold_id(int user_rold_id) {
-        this.user_rold_id = user_rold_id;
+    public void setUser_role_id(int user_role_id) {
+        this.user_role_id = user_role_id;
     }
 
 }

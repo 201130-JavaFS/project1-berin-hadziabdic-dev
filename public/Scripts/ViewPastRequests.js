@@ -26,9 +26,18 @@ function getPastRequests() {
     }
 
     let tr = document.createElement("tr");
-    let { dateSubmitted, description, amount, status, processedBy } = JSONdata;
+    let {
+      ticketNumber,
+      dateSubmitted,
+      description,
+      amount,
+      status,
+      requestedBy,
+      processedBy,
+    } = JSONdata;
 
     //append all data to dynamically generated tr.
+
     appendTD(tr, dateSubmitted, 1);
     appendTD(tr, description, 3);
     appendTD(tr, amount, 1); //spaces added to fix offset caused by scroll on tbody

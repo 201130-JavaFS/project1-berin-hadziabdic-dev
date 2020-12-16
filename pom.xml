@@ -14,16 +14,33 @@
   </properties>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.5</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
     <!-- I am only importing and using Bcrypt password encoder from spring security here, btu everything else 
       that is an important excercise in this project, such as implementing authentication, will be done 
       through my own code.
     -->
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
     <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-crypto</artifactId>
-      <version>5.4.2</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <version>2.4.1</version>
     </dependency>
+
 
     <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
     <dependency>

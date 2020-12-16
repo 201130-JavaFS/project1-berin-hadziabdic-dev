@@ -1,0 +1,56 @@
+
+
+Logging In
+
+REQ EXPECTED
+/login
+POST
+content-type:application/json
+body: {username:string, password:string}
+
+
+RES PRODUCES
+status code: 200 | 400
+cookies: sessionID:"...", username:"..."
+
+
+
+
+creating a reimb request as an employee
+
+REQ EXPECTED
+/createRequest
+POST
+content-type:app/json
+cookies:username:string, sessionID:string
+
+
+
+RES PRODUCES
+
+
+viewing all reimb requests as finance mgr
+
+REQ EXPECTED
+/viewallrequests
+GET
+cookies: username:string, sessionID:string
+
+RES PRODUCES
+status: 200| 400 | 401
+body:{ data: [ {
+      ticketNumber,
+      dateSubmitted,
+      description,
+      amount,
+      status,
+      requestedBy,
+      processedBy,
+    }]}
+
+
+
+
+
+
+

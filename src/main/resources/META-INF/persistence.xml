@@ -10,6 +10,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ers" /> <!-- BD Mane -->
             <property name="javax.persistence.jdbc.user" value="postgres" /> <!-- DB User -->
             <property name="javax.persistence.jdbc.password" value="password" /> <!-- DB Password -->
+            <property name="hibernate.default_schema" value="project_one" /> <!-- Schema -->
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" /> <!-- DB Dialect -->
             <property name="hibernate.hbm2ddl.auto" value="update" /> <!-- create / create-drop / update -->
