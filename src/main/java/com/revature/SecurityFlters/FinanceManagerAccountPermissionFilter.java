@@ -13,7 +13,7 @@ import javax.servlet.ServletException;
  * This filter ensures an account has correct permissions for a target resource
  * resource.
  */
-public class AccountPermissionFilter extends HttpFilter {
+public class FinanceManagerAccountPermissionFilter extends AbstractAuthenticationFilter {
 
     /**
      * This method ensures that an authenticated user also has the correct account
@@ -27,6 +27,8 @@ public class AccountPermissionFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        boolean authenticateSessionIsManagerSession = userAuthenticationService.webServe(request, response);
+
         chain.doFilter(request, response);
     }
 

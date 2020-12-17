@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.revature.ModelLayer.DTO.Exceptions.InvalidEntityToDTOConversionException;
+import com.revature.ServiceLayer.Exceptions.InvalidHttpSessionStateException;
+import com.revature.ServiceLayer.Exceptions.NullHttpSessionException;
 
 public interface WebService<ReturnType> {
 
-    public ReturnType webServe(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, InvalidEntityToDTOConversionException;
+    public ReturnType webServe(HttpServletRequest req, HttpServletResponse res) throws IOException,
+            InvalidEntityToDTOConversionException, NullHttpSessionException, InvalidHttpSessionStateException;
 
 }

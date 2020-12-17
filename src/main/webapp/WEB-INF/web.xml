@@ -75,7 +75,7 @@
 
   <servlet-mapping>
     <servlet-name>GetAllTicketsServlet</servlet-name>
-    <url-pattern>/servicereciepts/getalltickets</url-pattern>
+    <url-pattern>/apiroot/user/financemanager/servicereciepts/getalltickets</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -85,7 +85,7 @@
 
   <servlet-mapping>
     <servlet-name>CreateReimbReqServlet</servlet-name>
-    <url-pattern>/servicereciepts/createticket</url-pattern>
+    <url-pattern>/apiroot/user/employee/servicereciepts/createticket</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -95,6 +95,6 @@
 
   <servlet-mapping>
     <servlet-name>ChangeReimbStatusServlet</servlet-name>
-    <url-pattern>/servicereciepts/updatestatus</url-pattern>
+    <url-pattern>/apiroot/user/financemanager/servicereciepts/updatestatus</url-pattern>
   </servlet-mapping>
 </web-app>

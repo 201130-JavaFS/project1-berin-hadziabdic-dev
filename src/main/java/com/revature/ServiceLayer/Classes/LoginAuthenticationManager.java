@@ -1,6 +1,8 @@
 package com.revature.ServiceLayer.Classes;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,10 +12,8 @@ import com.revature.API.AppAPI;
 import com.revature.ModelLayer.DTO.UserDTO;
 import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.UserEntityRepository;
+import com.revature.ServiceLayer.Interfaces.AuthenticationHandler;
 import com.revature.ServiceLayer.Interfaces.WebService;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * This class is a service layer class, and it performs user authentication.
@@ -21,10 +21,37 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class LoginAuthenticationManager implements WebService<Boolean> {
 
     private UserEntityRepository userRepo;
+    private Map<String, AuthenticationHandler> apiAuthenticationHandlers;
 
     public LoginAuthenticationManager() {
-        this.userRepo = new UserEntityRepository();
 
+        super();
+        this.userRepo = new UserEntityRepository();
+        apiAuthenticationHandlers = new HashMap<String, AuthenticationHandler>();
+
+        AuthenticationHandler loginHandler = (HttpServletRequest req, HttpServletResponse res) -> {
+            UserDTO loginData = new UserDTO(req);
+            boolean authenticated = false;
+            String endPoint = req.getRequestURI();
+
+            authenticated = authenticateUserCredentials(loginData);
+            if (authenticated) {
+                HttpSession userSession = req.getSession(true);
+                userSession.setMaxInactiveInterval(86400); // sessions last a day.
+            }
+            return authenticated;
+        };
+        AuthenticationHandler sessionAuthenticationHandler = (HttpServletRequest req, HttpServletResponse res) -> {
+            return this.authenticateSession(req);
+        };
+        AuthenticationHandler financeAuthenticationHandler = (HttpServletRequest req, HttpServletResponse res) -> {
+            return this.authenticateFinanceManagerPermissionsAndSession(req);
+        };
+
+        this.apiAuthenticationHandlers.put(AppAPI.LOGIN_USER, loginHandler);
+        this.apiAuthenticationHandlers.put(AppAPI.RECIEPTS_SERVICE_CREATE_TICKET, sessionAuthenticationHandler);
+        this.apiAuthenticationHandlers.put(AppAPI.RECIEPTS_SERVICE_CHANGE_RECIEPT_STATUS, financeAuthenticationHandler);
+        this.apiAuthenticationHandlers.put(AppAPI.RECIEPTS_SERVICE_GET_ALL, financeAuthenticationHandler);
     }
 
     /**
@@ -36,22 +63,17 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
     @Override
     public Boolean webServe(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-        UserDTO loginData = new UserDTO(req);
         Boolean authenticated = false;
         String endPoint = req.getRequestURI();
+        AuthenticationHandler handler = null;
 
-        // if we are logging the user in.
-        if (endPoint.equals(AppAPI.LOGIN_USER)) {
-            authenticated = authenticateUserCredentials(loginData);
-            if (authenticated) {
-                HttpSession userSession = req.getSession(true);
-                userSession.setMaxInactiveInterval(86400); // sessions last a day.
-            }
-        } else {
+        handler = this.apiAuthenticationHandlers.get(endPoint);
 
-        }
+        if (handler != null)
+            authenticated = handler.handleAuthentication(req, res);
 
         return authenticated;
+
     }
 
     /**
@@ -99,9 +121,32 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
         return authenticSession;
     }
 
-    public boolean authenticateUserAccountPermissions(HttpServletRequest req) {
-hgkgj
-        return false;
+    /**
+     * This method should be used to authenticate users who are requesting account
+     * manager services.
+     * 
+     * @return returns a boolean indicating if session owner is a finance manager.
+     */
+
+    public boolean authenticateFinanceManagerPermissionsAndSession(HttpServletRequest req) {
+
+        HttpSession usersSession = req.getSession();
+        Boolean authenticateFinanceManager = false;
+        String usernameSessionAttribute = null;
+        UserEntity usersEntity = null;
+        ;
+        if (usersSession != null) {
+            usernameSessionAttribute = usersSession.getAttribute("username").toString();
+
+            if (usersSession != null && usernameSessionAttribute.length() > 0) {
+                usersEntity = this.userRepo.findById(usernameSessionAttribute);
+
+                if (usersEntity != null && usersEntity.getUser_role_id() == 2)
+                    authenticateFinanceManager = true;
+            }
+        }
+
+        return authenticateFinanceManager;
     }
 
 }

@@ -143,6 +143,22 @@ public class ReceiptEntityRepository implements PoneRepository<Long, RecieptEnti
         return allRecieptsQueryResults;
     }
 
+    public List<RecieptEntity> getAllRecieptsByUser(String username) {
+        List<RecieptEntity> usersReciepts = null;
+        EntityTransaction entityTransaction = this.manager.getTransaction();
+        entityTransaction.begin();
+
+        if (username != null && username.length() > 0) {
+            TypedQuery<RecieptEntity> getAllRecieptsByUserQuery = manager
+                    .createNamedQuery(QueryBank.FIND_ALL_RECIEPTS_BY_USERNAME, RecieptEntity.class);
+            usersReciepts = getAllRecieptsByUserQuery.getResultList();
+        }
+
+        entityTransaction.commit();
+
+        return usersReciepts;
+    }
+
     public Boolean updateRecieptByTicketIdToNewReimbStatus(UserRecieptDTO dtoEntityToUpdateStatusFor) {
         Boolean success = false;
         long ticketIdDTO = dtoEntityToUpdateStatusFor.ticketNumber;

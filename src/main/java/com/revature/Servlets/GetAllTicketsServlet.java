@@ -3,24 +3,54 @@ package com.revature.Servlets;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.revature.ServiceLayer.Classes.LoginAuthenticationManager;
 import com.revature.ServiceLayer.Classes.RecieptService;
 import com.revature.ServiceLayer.Interfaces.WebService;
 
+/**
+ * This servlet is in charge of servicing the endpoint assigned to the get all
+ * tickets feature.
+ */
 public class GetAllTicketsServlet extends AbstractExceptionBoundaryHttpServlet {
 
-    WebService<Boolean> recieptService;
+    private static WebService<Boolean> recieptService = new RecieptService();
+    private static WebService<Boolean> financeManagerSessionAuthenticatorManager = new LoginAuthenticationManager();
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
     public GetAllTicketsServlet() {
-        this.recieptService = new RecieptService();
+        super();
+
     }
 
+    /**
+     * The doGet returns a list of all tickets inside the database, if and only if,
+     * the requestor has a valid sessionid and the requestor's session is tied to a
+     * finance managers user account
+     */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) {
-        this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) {
+        boolean authenticFinanceManager = false;
+        boolean getAllRecieptsSuccesful = false;
+
+        authenticFinanceManager = this.exceptionBoundary.ExceptionBoundaryService(req, res,
+                financeManagerSessionAuthenticatorManager);
+
+        if (authenticFinanceManager) {
+            getAllRecieptsSuccesful = this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
+        }
+
+        if (res.getStatus() < 500 && authenticFinanceManager && getAllRecieptsSuccesful) {
+            res.setStatus(200);
+        } else {
+            if (!authenticFinanceManager)
+                res.setStatus(401);
+            else
+                res.setStatus(400);
+        }
+
     }
 
 }

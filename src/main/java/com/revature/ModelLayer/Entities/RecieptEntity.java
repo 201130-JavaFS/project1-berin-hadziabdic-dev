@@ -22,7 +22,8 @@ ers_reimbursment(remb_id serial primary key, reimb_amount numeric(12,2),
 
 @NamedQueries({ @NamedQuery(name = QueryBank.DELETE_RECIEPT, query = QueryBank.DELETE_RECIEPT_JPA_QUERY),
         @NamedQuery(name = QueryBank.FIND_ALL_RECIEPTS, query = QueryBank.FIND_ALL_RECIEPTS_JPA_QUERY),
-        @NamedQuery(name = QueryBank.UPDATE_RECIEPT_STATUS, query = QueryBank.UPDATE_RECIEPT_STATUS_JPA_QUERY) })
+        @NamedQuery(name = QueryBank.UPDATE_RECIEPT_STATUS, query = QueryBank.UPDATE_RECIEPT_STATUS_JPA_QUERY),
+        @NamedQuery(name = QueryBank.FIND_ALL_RECIEPTS_BY_USERNAME, query = QueryBank.FIND_ALL_RECIEPTS_BY_USERNAME_JPA_QUERY) })
 @Entity(name = "ers_reimbursment")
 @Table(name = "ers_reimbursment")
 public class RecieptEntity {

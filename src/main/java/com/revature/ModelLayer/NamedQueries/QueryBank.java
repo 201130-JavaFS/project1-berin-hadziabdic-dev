@@ -17,6 +17,9 @@ public final class QueryBank {
     public static final String FIND_ALL_RECIEPTS = "findAllReciepts";
     public static final String FIND_ALL_RECIEPTS_JPA_QUERY = "select r from ers_reimbursment r";
 
+    public static final String FIND_ALL_RECIEPTS_BY_USERNAME = "findAllRecieptsByUsername";
+    public static final String FIND_ALL_RECIEPTS_BY_USERNAME_JPA_QUERY = "select e from ers_reimbursment e where e.reimb_author = :reimb_author";
+
     public static final String UPDATE_RECIEPT_STATUS = "updateRecieptStatus";
     public static final String UPDATE_RECIEPT_STATUS_JPA_QUERY = "update ers_reimbursment r set r.reimb_status_id=:reimb_status_id where r.remb_id=:remb_id";
 
