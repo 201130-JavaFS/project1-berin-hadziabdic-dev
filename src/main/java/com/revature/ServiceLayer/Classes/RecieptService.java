@@ -20,6 +20,8 @@ import com.revature.ServiceLayer.Exceptions.InvalidHttpSessionStateException;
 import com.revature.ServiceLayer.Exceptions.NullHttpSessionException;
 import com.revature.ServiceLayer.Interfaces.WebService;
 
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
+
 /**
  * The RecieptService class provides all required application operations for
  * User reciepts.
@@ -49,7 +51,7 @@ public class RecieptService implements WebService<Boolean> {
     public Boolean webServe(HttpServletRequest req, HttpServletResponse res) throws IOException,
             InvalidEntityToDTOConversionException, NullHttpSessionException, InvalidHttpSessionStateException {
         // TODO Auto-generated method stub
-        String subservice = req.getParameter("subservice");
+        String subservice = req.getRequestURI();
         Boolean success = false;
 
         switch (subservice) {
@@ -75,17 +77,41 @@ public class RecieptService implements WebService<Boolean> {
     /**
      * This method creates a new ticket via using the privately nested repository.
      * 
+     * @throws InvalidHttpSessionStateException
+     * 
      * @returns Boolea indicating if creation operation was succesful.
      * @throws throws various exceptions which self document the nature of the
      *                failure.
      */
 
     private Boolean createTicketThroughRepository(HttpServletRequest req, HttpServletResponse res)
-            throws JsonMappingException, JsonProcessingException, IOException, InvalidEntityToDTOConversionException {
+            throws JsonMappingException, JsonProcessingException, IOException, InvalidEntityToDTOConversionException,
+            InvalidHttpSessionStateException {
 
         Boolean success = false;
+        HttpSession usersSession = req.getSession(false);
+
+        // dbl check session in case it becomes invalidated at this point.
+        // unlikely to happen since its been validated bhy authenitcation but could be
+        // an edge case where a session invalidates
+        // right after validation
+        if (usersSession == null)
+            throw new InvalidHttpSessionStateException();
+
+        Integer usersSessionId = Integer.valueOf(usersSession.getAttribute("ers_users_id").toString()); // get
+        String usernameFromSession = usersSession.getAttribute("ers_username").toString(); // user
+        // id
+        // from
+        // session
+
+        if (usersSessionId == null || usersSessionId < 1 || usernameFromSession == null
+                || usernameFromSession.length() == 0)
+            throw new InvalidHttpSessionStateException();
+
         UserRecieptDTO userTicketToCreateInDatabase = new UserRecieptDTO(req);
-        RecieptEntity newTicketEntity = new RecieptEntity(userTicketToCreateInDatabase);
+        userTicketToCreateInDatabase.requestedBy = usersSessionId;// set dto id to id from session
+
+        RecieptEntity newTicketEntity = new RecieptEntity(userTicketToCreateInDatabase); // create new reciept entity
 
         success = this.receiptEntityRepository.create(newTicketEntity);
 

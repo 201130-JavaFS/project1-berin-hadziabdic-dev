@@ -9,7 +9,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.revature.ModelLayer.DTO.UserDTO;
-import com.revature.ModelLayer.DTO.Exceptions.InvalidEntityToDTOConversionException;
+import com.revature.ModelLayer.DTO.Exceptions.IncompleteOrInvalidUserDTOException;
 import com.revature.ModelLayer.NamedQueries.QueryBank;
 
 @NamedQueries({ @NamedQuery(name = QueryBank.FIND_BY_USERNAME, query = QueryBank.FIND_BY_USERNAME_JPA_QUERY),
@@ -44,18 +44,20 @@ public class UserEntity {
     @Column(columnDefinition = "serial")
     private int user_role_id;
 
-    public UserEntity(UserDTO createUserDTO) throws InvalidEntityToDTOConversionException {
+    public UserEntity(UserDTO createUserDTO) throws IncompleteOrInvalidUserDTOException {
 
         boolean validUsername = createUserDTO.username != null && createUserDTO.username.length() > 0;
         boolean validPassword = createUserDTO.password != null & createUserDTO.password.length() != 0;
-        boolean validEmail = createUserDTO.email != null & createUserDTO.email.length() != 0;
+        boolean validEmail = createUserDTO.email != null && createUserDTO.email.length() != 0;
 
         if (validUsername && validPassword && validEmail) {
             this.ers_username = createUserDTO.username;
             this.ers_password = createUserDTO.password;
             this.user_email = createUserDTO.email;
             this.user_role_id = 1; // new users are automatically given the title employee
-        }
+        } else
+            throw new IncompleteOrInvalidUserDTOException(
+                    "Attempting to unpack DTO into UserEntity in which DTO has one or more required fields empty or set to null.");
 
     }
 

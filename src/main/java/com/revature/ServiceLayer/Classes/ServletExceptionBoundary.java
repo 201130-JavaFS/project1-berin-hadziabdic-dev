@@ -1,9 +1,13 @@
 package com.revature.ServiceLayer.Classes;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.revature.ServiceLayer.Interfaces.ExceptionBoundary;
 import com.revature.ServiceLayer.Interfaces.WebService;
 
@@ -22,6 +26,7 @@ public class ServletExceptionBoundary implements ExceptionBoundary<Object, Boole
      * up to this functions. Exceptions are caught in the catch block and are
      * written out to the log location specified by the generic log paramater.
      */
+
     @Override
     public Boolean ExceptionBoundaryService(HttpServletRequest req, HttpServletResponse res,
             WebService<Boolean> serviceToInvoke) {
@@ -31,8 +36,14 @@ public class ServletExceptionBoundary implements ExceptionBoundary<Object, Boole
         try {
             success = serviceToInvoke.webServe(req, res);
 
+        } catch (InvalidDefinitionException invalidUserDTO) {
+            // loggin here
+
         } catch (Exception e) {
+            System.out.println("Exception");
+            System.out.println(e.getMessage());
             System.out.println(e.toString());
+
             res.setStatus(500);
             // log here
         }

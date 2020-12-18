@@ -25,8 +25,8 @@ public class CreateUserServlet extends AbstractExceptionBoundaryHttpServlet {
         if (serviceSuccess) {
             res.setStatus(201);
         } else {
-
-            res.setStatus(400);
+            if (res.getStatus() < 500)
+                res.setStatus(400);
         }
 
     }

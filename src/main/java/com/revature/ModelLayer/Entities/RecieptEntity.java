@@ -1,6 +1,7 @@
 package com.revature.ModelLayer.Entities;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,22 +31,23 @@ public class RecieptEntity {
 
     @Id
     @GeneratedValue
-    private int remb_id;
+    private Integer remb_id;
 
     @Column(columnDefinition = "numeric(10,2)")
     private double reimb_amount;
     @Column(columnDefinition = "timestamp")
-    private Date reimb_submitted;
+    @GeneratedValue
+    private Timestamp reimb_submitted;
     @Column(columnDefinition = "timestamp")
-    private Date reimb_resolved;
+    private Timestamp reimb_resolved;
     @Column(columnDefinition = "text")
     private String reimb_description;
     @Column(columnDefinition = "bytea")
     private byte[] reimb_receipt;
     @Column(columnDefinition = "text")
-    private String reimb_author;
+    private Integer reimb_author;
     @Column(columnDefinition = "serial")
-    private String reimb_resolver;
+    private Integer reimb_resolver;
     @Column(columnDefinition = "serial")
     private int reimb_status_id;
     @Column(columnDefinition = "serial")
@@ -54,14 +56,15 @@ public class RecieptEntity {
     public RecieptEntity(UserRecieptDTO userTicketToCreateInDatabase) {
 
         this.reimb_amount = userTicketToCreateInDatabase.amount;
-        this.reimb_submitted = userTicketToCreateInDatabase.dateSubmitted;
+        this.reimb_submitted = null;
         this.reimb_resolved = null;
         this.reimb_description = userTicketToCreateInDatabase.description;
         this.reimb_receipt = null; // added ticket later.
         this.reimb_author = userTicketToCreateInDatabase.requestedBy;
         this.reimb_resolver = null;
-        this.reimb_status_id = userTicketToCreateInDatabase.status;
+        this.reimb_status_id = 1;
         this.reimb_type_id = userTicketToCreateInDatabase.type;
+
     }
 
     public int getRemb_id() {
@@ -76,11 +79,11 @@ public class RecieptEntity {
         return this.reimb_amount;
     }
 
-    public Date getReimb_submitted() {
+    public Timestamp getReimb_submitted() {
         return this.reimb_submitted;
     }
 
-    public Date getReimb_resolved() {
+    public Timestamp getReimb_resolved() {
         return this.reimb_resolved;
     }
 
@@ -92,11 +95,11 @@ public class RecieptEntity {
         return this.reimb_receipt;
     }
 
-    public String getReimb_author() {
+    public int getReimb_author() {
         return this.reimb_author;
     }
 
-    public String getReimb_resolver() {
+    public int getReimb_resolver() {
         return this.reimb_resolver;
     }
 

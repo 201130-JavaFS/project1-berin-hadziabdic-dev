@@ -17,8 +17,14 @@ public class ChangeTicketStatusStateServlet extends AbstractExceptionBoundaryHtt
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) {
 
-        this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
+        boolean serviceSuccess = false;
 
+        serviceSuccess = this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
+
+        if (serviceSuccess)
+            res.setStatus(200);
+        else
+            res.setStatus(400);
     }
 
 }

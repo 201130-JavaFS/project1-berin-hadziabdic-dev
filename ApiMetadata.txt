@@ -1,9 +1,13 @@
 
 
+
+----------------------------------------
 Logging In
 
+
+
 REQ EXPECTED
-/login
+/apiroot/user/login
 POST
 content-type:application/json
 body: {username:string, password:string}
@@ -11,10 +15,12 @@ body: {username:string, password:string}
 
 RES PRODUCES
 status code: 200 | 400
-cookies: sessionID:"...", username:"..."
+cookies: JSESSIONID:"...", username:"..."
 
 
+WORKING
 
+-----------------------------------------
 
 creating a reimb request as an employee
 
@@ -22,7 +28,13 @@ REQ EXPECTED
 /createRequest
 POST
 content-type:app/json
-cookies:username:string, sessionID:string
+cookies:username:string, JSESSIONID:string
+JSON: 
+
+  {
+     "description": "string","amount": greater than 0 ,"type": between 0 and 4}
+  }
+
 
 
 

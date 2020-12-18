@@ -24,12 +24,25 @@ public class FinanceManagerAccountPermissionFilter extends AbstractAuthenticatio
      * @throws ServletException
      * @throws IOException
      */
-    @Override
-    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        boolean authenticateSessionIsManagerSession = userAuthenticationService.webServe(request, response);
 
-        chain.doFilter(request, response);
+    public FinanceManagerAccountPermissionFilter() {
+        super();
+    }
+
+    @Override
+    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
+        // Perform authentication checking inside exceptionboundary
+        boolean authenticateSessionIsManagerSession = this.filterExceptionBoundary.ExceptionBoundaryService(req, res,
+                userAuthenticationService);
+
+        if (authenticateSessionIsManagerSession) // if authenitcation passes, pass of request to servlet
+            chain.doFilter(req, res);
+        else {
+            if (res.getStatus() < 500) // if authenitcation did not fail due to 500
+                res.setStatus(401); // user not authorized
+
+        }
     }
 
 }

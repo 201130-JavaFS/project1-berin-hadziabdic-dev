@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.ModelLayer.DTO.UserDTO;
+import com.revature.ModelLayer.DTO.Exceptions.IncompleteOrInvalidUserDTOException;
 import com.revature.ModelLayer.DTO.Exceptions.InvalidEntityToDTOConversionException;
 import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.UserEntityRepository;
@@ -38,10 +39,11 @@ public class CreateUserService implements WebService<Boolean> {
      * @return returns true on success or false on failure. May throw exceptions in
      *         case of bad input, db connectivity issues, and other potentional
      *         unchecked exceptions.
+     * @throws IncompleteOrInvalidUserDTOException
      */
     @Override
     public Boolean webServe(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, InvalidEntityToDTOConversionException {
+            throws IOException, InvalidEntityToDTOConversionException, IncompleteOrInvalidUserDTOException {
 
         UserDTO createUserDTO = new UserDTO(req);
         UserEntity newUserEntityRepresentation = new UserEntity(createUserDTO);

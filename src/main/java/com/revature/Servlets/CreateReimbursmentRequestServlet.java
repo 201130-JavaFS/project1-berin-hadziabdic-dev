@@ -20,7 +20,15 @@ public class CreateReimbursmentRequestServlet extends AbstractExceptionBoundaryH
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) {
-        this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
+
+        boolean success = false;
+
+        success = this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
+
+        if (success)
+            res.setStatus(200);
+        else if (res.getStatus() < 500)
+            res.setStatus(400);
 
     }
 

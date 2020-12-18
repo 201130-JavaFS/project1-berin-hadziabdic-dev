@@ -1,6 +1,7 @@
 package com.revature.ServiceLayer.Classes;
 
 import java.io.IOException;
+import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.revature.API.AppAPI;
 import com.revature.ModelLayer.DTO.UserDTO;
 import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.UserEntityRepository;
+import com.revature.ServiceLayer.Exceptions.FilterFoundNoAuthenticationHandlerForAuthenticatedResourceException;
 import com.revature.ServiceLayer.Interfaces.AuthenticationHandler;
 import com.revature.ServiceLayer.Interfaces.WebService;
 
@@ -20,6 +22,7 @@ import com.revature.ServiceLayer.Interfaces.WebService;
  */
 public class LoginAuthenticationManager implements WebService<Boolean> {
 
+    private final String USERNAME = "ers_username";
     private UserEntityRepository userRepo;
     private Map<String, AuthenticationHandler> apiAuthenticationHandlers;
 
@@ -31,12 +34,18 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
 
         AuthenticationHandler loginHandler = (HttpServletRequest req, HttpServletResponse res) -> {
             UserDTO loginData = new UserDTO(req);
+            UserEntity logInUserData = userRepo.findById(loginData.username);
+
+            if (logInUserData == null)
+                throw new UnexpectedException(
+                        "A user entity was discovered null inside the login authentication manager at a point where it was impossible for the entity to be in a null state by design.");
             boolean authenticated = false;
-            String endPoint = req.getRequestURI();
 
             authenticated = authenticateUserCredentials(loginData);
             if (authenticated) {
                 HttpSession userSession = req.getSession(true);
+                userSession.setAttribute(USERNAME, loginData.username);
+                userSession.setAttribute("ers_users_id", logInUserData.getErs_users_id().toString());
                 userSession.setMaxInactiveInterval(86400); // sessions last a day.
             }
             return authenticated;
@@ -59,9 +68,11 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
      * body into a valid DTO.
      * 
      * @return returns whether or not the authentication was succesful.
+     * @throws FilterFoundNoAuthenticationHandlerForAuthenticatedResource
      */
     @Override
-    public Boolean webServe(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public Boolean webServe(HttpServletRequest req, HttpServletResponse res)
+            throws IOException, FilterFoundNoAuthenticationHandlerForAuthenticatedResourceException {
 
         Boolean authenticated = false;
         String endPoint = req.getRequestURI();
@@ -71,6 +82,8 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
 
         if (handler != null)
             authenticated = handler.handleAuthentication(req, res);
+        else
+            throw new FilterFoundNoAuthenticationHandlerForAuthenticatedResourceException();
 
         return authenticated;
 
@@ -100,7 +113,7 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
 
         if (validDTO && validEntity) {
             authenticated = dto.username.equals(entity.getErs_username())
-                    && this.userRepo.repositoryEncoder.matches(dto.password, entity.getErs_password());
+                    && UserEntityRepository.repositoryEncoder.matches(dto.password, entity.getErs_password());
         }
 
         return authenticated;
@@ -115,7 +128,7 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
                 && usernameOfSessionUserFromRequest.length() > 0 && sessionObtainedFromRequet != null;
 
         if (authenticSession) {
-            sessionObjectUsernameAttribute = sessionObtainedFromRequet.getAttribute("username").toString();
+            sessionObjectUsernameAttribute = sessionObtainedFromRequet.getAttribute(USERNAME).toString();
             authenticSession = usernameOfSessionUserFromRequest.equals(sessionObjectUsernameAttribute);
         }
         return authenticSession;
@@ -134,11 +147,11 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
         Boolean authenticateFinanceManager = false;
         String usernameSessionAttribute = null;
         UserEntity usersEntity = null;
-        ;
-        if (usersSession != null) {
-            usernameSessionAttribute = usersSession.getAttribute("username").toString();
 
-            if (usersSession != null && usernameSessionAttribute.length() > 0) {
+        if (usersSession != null) {
+            usernameSessionAttribute = usersSession.getAttribute(USERNAME).toString();
+
+            if (usernameSessionAttribute.length() > 0) {
                 usersEntity = this.userRepo.findById(usernameSessionAttribute);
 
                 if (usersEntity != null && usersEntity.getUser_role_id() == 2)

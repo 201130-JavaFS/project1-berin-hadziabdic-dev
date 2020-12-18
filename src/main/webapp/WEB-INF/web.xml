@@ -6,6 +6,7 @@
   </welcome-file-list>
 
 
+  <!-- FILTERS ************************************************************************************************************8 -->
   <filter>
     <display-name>JsonFilter</display-name>
     <filter-name>JsonFilter</filter-name>
@@ -13,9 +14,10 @@
       com.revature.SecurityFlters.JsonFilter
     </filter-class>
   </filter>
+
   <filter-mapping>
     <filter-name>JsonFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/apiroot/*</url-pattern>
   </filter-mapping>
   <filter>
     <display-name>SessionCheckerFilter</display-name>
@@ -26,16 +28,21 @@
   </filter>
   <filter-mapping>
     <filter-name>SessionCheckerFilter</filter-name>
-    <url-pattern>/createRequest</url-pattern>
+    <url-pattern>/apiroot/user/employee/*</url-pattern>
   </filter-mapping>
+
+
   <filter>
-    <filter-name>AccountPermissionFilter</filter-name>
-    <filter-class>com.revature.SecurityFlters.AccountPermissionFilter</filter-class>
+    <filter-name>FinanceManagerAccountPermissionFilter</filter-name>
+    <filter-class>com.revature.SecurityFlters.FinanceManagerAccountPermissionFilter</filter-class>
   </filter>
+
   <filter-mapping>
-    <filter-name>AccountPermissionFilter</filter-name>
-    <url-pattern>/createRequest</url-pattern>
+    <filter-name>FinanceManagerAccountPermissionFilter</filter-name>
+    <url-pattern>/apiroot/user/financemanager/*</url-pattern>
   </filter-mapping>
+
+  <!-- SERVLETS  **************************************************************************************************** -->
 
   <servlet>
     <description>Servlet mapped to login URI</description>
@@ -64,7 +71,7 @@
   <servlet-mapping>
     <servlet-name>CreateUserServlet</servlet-name>
     <url-pattern>
-      /apiroot/user/createuser
+    /apiroot/createuser
     </url-pattern>
 
   </servlet-mapping>

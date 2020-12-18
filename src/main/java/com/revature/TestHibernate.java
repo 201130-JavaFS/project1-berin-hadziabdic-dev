@@ -1,5 +1,9 @@
 package com.revature;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
+import com.revature.ModelLayer.DTO.UserRecieptDTO;
 import com.revature.ModelLayer.Entities.RecieptEntity;
 import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.ReceiptEntityRepository;
@@ -12,21 +16,19 @@ public class TestHibernate {
     public static void main(String[] args) {
 
         try {
-            UserEntity testInser = new UserEntity();
-            PasswordEncoder encodr = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder(6);
-            testInser.setErs_username("berin4114");
-            testInser.setErs_password("berin3");
-            testInser.setUser_email("1b1erin@email.com");
-            testInser.setUser_first_name("berin");
-            testInser.setUser_last_name("bebea");
-            testInser.setUser_role_id(1);
 
             UserEntityRepository repo = new UserEntityRepository();
-            ReceiptEntityRepository recieptRepo = new ReceiptEntityRepository();
-            repo.findById("berin"); // repo.create(testInser);
-            repo.deleteById("berin44");
 
-            RecieptEntity re = recieptRepo.findById(1l);
+            UserRecieptDTO urd = new UserRecieptDTO();
+            urd.amount = 999.12;
+            urd.description = "hi from tester";
+            urd.requestedBy = 10;
+            urd.dateSubmitted = new Timestamp(System.currentTimeMillis());
+            urd.type = 1;
+
+            RecieptEntity re = new RecieptEntity(urd);
+            ReceiptEntityRepository rep = new ReceiptEntityRepository();
+            rep.create(re);
 
             int x = 4;
         } catch (Exception e) {

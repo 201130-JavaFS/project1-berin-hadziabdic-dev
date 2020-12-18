@@ -1,7 +1,7 @@
 package com.revature.ModelLayer.DTO;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,16 +16,21 @@ import org.apache.commons.io.IOUtils;
 
 public class UserRecieptDTO {
     public long ticketNumber;
-    public Date dateSubmitted;
-    public Date dateResolved;
+    public Timestamp dateSubmitted;
+    public Timestamp dateResolved;
     public String description;
     public double amount;
     public int status;
-    public String requestedBy;
-    public String processedBy;
+    public Integer requestedBy;
+    public Integer processedBy;
     public int type;
 
     private static ObjectMapper jsonPackerUnpacker = new ObjectMapper();
+
+    public UserRecieptDTO() {
+        this.status = 1;
+        this.type = 1;
+    }
 
     public UserRecieptDTO(RecieptEntity recieptEntity) throws InvalidEntityToDTOConversionException {
         if (recieptEntity == null)
@@ -59,28 +64,40 @@ public class UserRecieptDTO {
         UserRecieptDTO buffer = this.jsonPackerUnpacker.readValue(IOUtils.toString(req.getReader()),
                 UserRecieptDTO.class);
 
-        if (buffer.ticketNumber < 0 || buffer.requestedBy == null || buffer.requestedBy.length() == 0)
+        if (buffer.ticketNumber < 0 || amount < 0 || buffer.type <= 0)
             throw new InvalidEntityToDTOConversionException();
 
         if (buffer != null) {
-            this.ticketNumber = buffer.ticketNumber;
-            this.dateSubmitted = buffer.dateSubmitted;
-            this.dateResolved = buffer.dateResolved;
-            this.description = buffer.description;
+            // all nested if fields are optional, but in some cases will be populated in the
+            // DTO
+            if (ticketNumber > 0)
+                this.ticketNumber = buffer.ticketNumber;
+            if (dateSubmitted != null)
+                this.dateSubmitted = buffer.dateSubmitted;
+            if (dateResolved != null)
+                this.dateResolved = buffer.dateResolved;
+            if (buffer.description != null)
+                this.description = buffer.description;
+            if (buffer.processedBy != null)
+                this.processedBy = buffer.processedBy;
+            if (buffer.requestedBy != null)
+                this.requestedBy = buffer.requestedBy;
+
+            this.type = buffer.type;
             this.amount = buffer.amount;
-            this.status = buffer.status;
-            this.requestedBy = buffer.requestedBy;
-            this.processedBy = buffer.processedBy;
+            this.status = 1;
 
         }
 
     }
 
     private boolean isValidDTO_ForCreation() {
-        boolean validDates = this.dateSubmitted != null;
-        boolean validStatus = this.status >= 0;
-        boolean validRequestedBy = this.requestedBy != null && this.requestedBy.length() > 0;
 
-        return validDates && validStatus && validRequestedBy;
+        boolean validStatus = this.status > 0;
+        boolean validRequestedBy = this.requestedBy != null && this.requestedBy > 0;
+        boolean validReimbType = this.type > 0;
+        boolean validAmount = this.amount >= 0;
+
+        return validAmount && validStatus && validRequestedBy && validReimbType;
     }
 }
