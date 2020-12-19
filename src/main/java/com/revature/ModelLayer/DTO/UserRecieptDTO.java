@@ -15,7 +15,7 @@ import com.revature.ModelLayer.Entities.RecieptEntity;
 import org.apache.commons.io.IOUtils;
 
 public class UserRecieptDTO {
-    public long ticketNumber;
+    public Integer ticketNumber;
     public Timestamp dateSubmitted;
     public Timestamp dateResolved;
     public String description;
@@ -49,16 +49,28 @@ public class UserRecieptDTO {
 
     public UserRecieptDTO(HttpServletRequest req, boolean isUsedForCreation)
             throws JsonMappingException, JsonProcessingException, IOException, InvalidEntityToDTOConversionException {
-        this(req);
 
-        if (isUsedForCreation && !this.isValidDTO_ForCreation()) {
-            throw new IncompleteRecieptDTOEntityConversion();
+        if (isUsedForCreation) {
+            this.unpackReqAndConstructCreationDTO(req);
 
+            if (!this.isValidDTO_ForCreation())
+                throw new IncompleteRecieptDTOEntityConversion();
+        } else {
+            this.unpackReqAndConstructUpdateTicketStatusDTO(req);
         }
 
     }
 
-    public UserRecieptDTO(HttpServletRequest req)
+    private void unpackReqAndConstructUpdateTicketStatusDTO(HttpServletRequest req)
+            throws JsonMappingException, JsonProcessingException, IOException {
+        UserRecieptDTO updateTicketStatusDTO = this.jsonPackerUnpacker.readValue(IOUtils.toString(req.getReader()),
+                UserRecieptDTO.class);
+
+        this.ticketNumber = updateTicketStatusDTO.ticketNumber;
+        this.status = updateTicketStatusDTO.status;
+    }
+
+    private void unpackReqAndConstructCreationDTO(HttpServletRequest req)
             throws JsonMappingException, JsonProcessingException, IOException, InvalidEntityToDTOConversionException {
 
         UserRecieptDTO buffer = this.jsonPackerUnpacker.readValue(IOUtils.toString(req.getReader()),
@@ -70,11 +82,11 @@ public class UserRecieptDTO {
         if (buffer != null) {
             // all nested if fields are optional, but in some cases will be populated in the
             // DTO
-            if (ticketNumber > 0)
+            if (buffer.ticketNumber > 0)
                 this.ticketNumber = buffer.ticketNumber;
-            if (dateSubmitted != null)
+            if (buffer.dateSubmitted != null)
                 this.dateSubmitted = buffer.dateSubmitted;
-            if (dateResolved != null)
+            if (buffer.dateResolved != null)
                 this.dateResolved = buffer.dateResolved;
             if (buffer.description != null)
                 this.description = buffer.description;

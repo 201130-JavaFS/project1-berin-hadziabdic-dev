@@ -15,7 +15,7 @@ public final class QueryBank {
     public static final String DELETE_RECIEPT_JPA_QUERY = "delete from ers_reimbursment e where e.remb_id= :remb_id ";
 
     public static final String FIND_ALL_RECIEPTS = "findAllReciepts";
-    public static final String FIND_ALL_RECIEPTS_JPA_QUERY = "select r from ers_reimbursment r";
+    public static final String FIND_ALL_RECIEPTS_JPA_QUERY = "from ers_reimbursment";
 
     public static final String FIND_ALL_RECIEPTS_BY_USERNAME = "findAllRecieptsByUsername";
     public static final String FIND_ALL_RECIEPTS_BY_USERNAME_JPA_QUERY = "select e from ers_reimbursment e where e.reimb_author = :reimb_author";

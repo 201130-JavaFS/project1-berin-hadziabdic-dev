@@ -16,11 +16,10 @@ import com.revature.ModelLayer.DTO.UserRecieptDTO;
 import com.revature.ModelLayer.DTO.Exceptions.InvalidEntityToDTOConversionException;
 import com.revature.ModelLayer.Entities.RecieptEntity;
 import com.revature.ModelLayer.Repositories.Classes.ReceiptEntityRepository;
+import com.revature.ModelLayer.Repositories.Exceptions.InvalidEntityPropertyException;
 import com.revature.ServiceLayer.Exceptions.InvalidHttpSessionStateException;
 import com.revature.ServiceLayer.Exceptions.NullHttpSessionException;
 import com.revature.ServiceLayer.Interfaces.WebService;
-
-import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 
 /**
  * The RecieptService class provides all required application operations for
@@ -46,11 +45,13 @@ public class RecieptService implements WebService<Boolean> {
      *         or false otherwise.
      * @throws InvalidHttpSessionStateException
      * @throws NullHttpSessionException
+     * @throws InvalidEntityPropertyException
      */
     @Override
-    public Boolean webServe(HttpServletRequest req, HttpServletResponse res) throws IOException,
-            InvalidEntityToDTOConversionException, NullHttpSessionException, InvalidHttpSessionStateException {
-        // TODO Auto-generated method stub
+    public Boolean webServe(HttpServletRequest req, HttpServletResponse res)
+            throws IOException, InvalidEntityToDTOConversionException, NullHttpSessionException,
+            InvalidHttpSessionStateException, InvalidEntityPropertyException {
+
         String subservice = req.getRequestURI();
         Boolean success = false;
 
@@ -108,7 +109,8 @@ public class RecieptService implements WebService<Boolean> {
                 || usernameFromSession.length() == 0)
             throw new InvalidHttpSessionStateException();
 
-        UserRecieptDTO userTicketToCreateInDatabase = new UserRecieptDTO(req);
+        boolean usingDTOforCreation = true;
+        UserRecieptDTO userTicketToCreateInDatabase = new UserRecieptDTO(req, usingDTOforCreation);
         userTicketToCreateInDatabase.requestedBy = usersSessionId;// set dto id to id from session
 
         RecieptEntity newTicketEntity = new RecieptEntity(userTicketToCreateInDatabase); // create new reciept entity
@@ -132,11 +134,11 @@ public class RecieptService implements WebService<Boolean> {
                                 // is not a failure
         // but an indcation that there is no reciept in the results.
         List<RecieptEntity> allRecieptsResultsList = this.receiptEntityRepository.getAllReciepts();
-        String[] entityToDTOjSONresultsConversion = this.getUserRecieptsJSONArray(allRecieptsResultsList);
+        String entityToDTOjSONresultsConversion = this.jsonParserPacker.writeValueAsString(allRecieptsResultsList);
 
         if (entityToDTOjSONresultsConversion != null) {
             res.addHeader("content-type", "application/json");
-            res.getWriter().write(entityToDTOjSONresultsConversion.toString());
+            res.getWriter().write(entityToDTOjSONresultsConversion);
         }
         return success;
 
@@ -150,54 +152,24 @@ public class RecieptService implements WebService<Boolean> {
                                 // is not a failure
         // but an indcation that there is no reciept in the results.
         HttpSession usersSession = req.getSession();
-        String username = null;
+        Integer userId = null;
 
         if (usersSession == null)
             throw new NullHttpSessionException();
 
-        username = usersSession.getAttribute("username").toString();
+        userId = Integer.valueOf(usersSession.getAttribute("ers_users_id").toString());
 
-        if (username == null)
+        if (userId == null || userId < 0)
             throw new InvalidHttpSessionStateException();
 
-        List<RecieptEntity> allRecieptsResultsList = this.receiptEntityRepository.getAllRecieptsByUser(username);
-        String[] entityToDTOjSONresultsConversion = this.getUserRecieptsJSONArray(allRecieptsResultsList);
+        List<RecieptEntity> allRecieptsResultsList = this.receiptEntityRepository.getAllRecieptsByUser(userId);
+        String entityToDTOjSONresultsConversion = this.jsonParserPacker.writeValueAsString(allRecieptsResultsList);
 
         if (entityToDTOjSONresultsConversion != null) {
             res.addHeader("content-type", "application/json");
-            res.getWriter().write(entityToDTOjSONresultsConversion.toString());
+            res.getWriter().write(entityToDTOjSONresultsConversion);
         }
         return success;
-    }
-
-    /**
-     * This object converts a list reciept entites into a json array string.
-     * 
-     * @returns Boolean indicating if creation operation was succesful.
-     * @throws throws various exceptions which self document the nature of the
-     *                failure.
-     */
-    private String[] getUserRecieptsJSONArray(List<RecieptEntity> listing)
-            throws InvalidEntityToDTOConversionException, JsonProcessingException {
-
-        String[] userRecieptDTO_JSONarray = null;
-        UserRecieptDTO recieptDTOiterator = null;
-        String recieptDTO_JSONstring = null;
-        int arrayDTOiterator = 0;
-
-        if (listing != null && !listing.isEmpty()) {
-            userRecieptDTO_JSONarray = new String[listing.size()];
-
-            for (RecieptEntity entityToConvertToDTO : listing) {
-                recieptDTOiterator = new UserRecieptDTO(entityToConvertToDTO);
-                recieptDTO_JSONstring = this.jsonParserPacker.writeValueAsString(recieptDTOiterator);
-                userRecieptDTO_JSONarray[arrayDTOiterator] = recieptDTO_JSONstring;
-                arrayDTOiterator++;
-            }
-        }
-
-        return userRecieptDTO_JSONarray;
-
     }
 
     /**
@@ -206,17 +178,19 @@ public class RecieptService implements WebService<Boolean> {
      * 
      * @return returns a bolean indicating the success or failure of the change
      *         reciept status operation.
-     * @throws throws various self documenting exceptions.
+     * @throws InvalidEntityPropertyException
+     * @throws throws                         various self documenting exceptions.
      */
 
     private Boolean changeRecieptStatusThroughRepository(HttpServletRequest req)
-            throws IOException, InvalidEntityToDTOConversionException {
+            throws IOException, InvalidEntityToDTOConversionException, InvalidEntityPropertyException {
 
         Boolean success = false;
+        boolean usingDTOforCreation = false;
+        UserRecieptDTO reciepToChangeData = new UserRecieptDTO(req, usingDTOforCreation);
 
-        UserRecieptDTO reciepToChangeData = new UserRecieptDTO(req);
-
-        success = this.receiptEntityRepository.updateRecieptByTicketIdToNewReimbStatus(reciepToChangeData);
+        success = this.receiptEntityRepository.updateTicketStatusByIdWithStatus(reciepToChangeData.ticketNumber,
+                reciepToChangeData.status);
 
         return success;
     }

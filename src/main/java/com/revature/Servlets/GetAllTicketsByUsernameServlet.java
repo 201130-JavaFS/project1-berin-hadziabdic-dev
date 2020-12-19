@@ -6,25 +6,32 @@ import javax.servlet.http.HttpServletResponse;
 import com.revature.ServiceLayer.Classes.RecieptService;
 import com.revature.ServiceLayer.Interfaces.WebService;
 
-public class ChangeTicketStatusStateServlet extends AbstractExceptionBoundaryHttpServlet {
+public class GetAllTicketsByUsernameServlet extends AbstractExceptionBoundaryHttpServlet {
 
     private WebService<Boolean> recieptService;
 
-    public ChangeTicketStatusStateServlet() {
+    public GetAllTicketsByUsernameServlet() {
+        super();
         this.recieptService = new RecieptService();
     }
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) {
 
-        boolean serviceSuccess = false;
+        boolean success = false;
 
-        serviceSuccess = this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
+        success = this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
 
-        if (serviceSuccess)
+        if (success)
             res.setStatus(200);
         else if (res.getStatus() < 500)
             res.setStatus(400);
+
     }
 
 }

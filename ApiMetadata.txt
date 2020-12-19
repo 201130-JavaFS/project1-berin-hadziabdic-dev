@@ -14,7 +14,7 @@ body: {username:string, password:string}
 
 
 RES PRODUCES
-status code: 200 | 400
+status: 200|400|500
 cookies: JSESSIONID:"...", username:"..."
 
 
@@ -22,10 +22,29 @@ WORKING
 
 -----------------------------------------
 
+Logging Out
+
+
+
+REQ EXPECTED
+/apiroot/user/logout
+POST
+content-type:application/json
+
+
+
+RES PRODUCES
+status: 200|400|500
+
+LOGS USER OUT AND INVALIDATES SESSION
+
+WORKING
+--------------------------------------------
+
 creating a reimb request as an employee
 
 REQ EXPECTED
-/createRequest
+/apiroot/user/employee/servicereciept/createticket
 POST
 content-type:app/json
 cookies:username:string, JSESSIONID:string
@@ -35,30 +54,77 @@ JSON:
      "description": "string","amount": greater than 0 ,"type": between 0 and 4}
   }
 
+RES PRODUCES
+cookies: jsessionid=..;username=...;
+status: 200|401|500
 
+WORKING
+
+----------------------------------------
+
+getting all tickets by all users as a manager.
+filtering done by javascript front end
+
+
+REQ EXPECTED
+/apiroot/user/financemanager/servicereciept/getalltickets
+content-type:application/json
 
 
 RES PRODUCES
 
+content-type:app/json
+status:200|403|500
 
-viewing all reimb requests as finance mgr
+[ {
+      ticketNumber: number,
+      dateSubmitted: timestamp to interpret as string,
+      description: string,
+      amount: number,
+      status: string of status ,
+      requestedBy : username of requestor,
+      processedBy : username of fm who approved | null,
+    }
+    ,...., 
+    object n of same type as above
+]
+
+
 
 REQ EXPECTED
-/viewallrequests
+/apiroot/user/financemanager/servicereciept/viewallrequests
 GET
-cookies: username:string, sessionID:string
+cookies: jsessionid:id from finance manager
 
 RES PRODUCES
 status: 200| 400 | 401
-body:{ data: [ {
-      ticketNumber,
-      dateSubmitted,
-      description,
-      amount,
-      status,
-      requestedBy,
-      processedBy,
-    }]}
+[ {
+      ticketNumber: number,
+      dateSubmitted: timestamp to interpret as string,
+      description: string,
+      amount: number,
+      status: string of status ,
+      requestedBy : username of requestor,
+      processedBy : username of fm who approved | null,
+    }
+    ,...., 
+    object n of same type as above
+]
+
+
+WORKING
+-----------------------------------------------
+
+REQ EXPECTED
+/apiroot/user/financemanager/servicereciept/updatestatus
+content-type:application/json
+POST
+cookies:JSESSIONID:session id from financemanager
+
+{ticketNumber:number id of ticket to change status of , status: "string mapped to a database status}
+
+
+
 
 
 
