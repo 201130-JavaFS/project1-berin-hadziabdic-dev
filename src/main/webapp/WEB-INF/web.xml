@@ -42,6 +42,15 @@
     <url-pattern>/apiroot/user/financemanager/*</url-pattern>
   </filter-mapping>
 
+  <filter>
+    <filter-name>CorsFilter</filter-name>
+    <filter-class>com.revature.SecurityFilters.CorsFIlter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>CorsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <!-- SERVLETS  **************************************************************************************************** -->
 
   <servlet>
@@ -73,8 +82,18 @@
     <url-pattern>
     /apiroot/createuser
     </url-pattern>
-
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>GetAllTicketsByUsernameServlet</servlet-name>
+    <servlet-class>com.revature.Servlets.GetAllTicketsByUsernameServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>GetAllTicketsByUsernameServlet</servlet-name>
+    <url-pattern>/apiroot/user/employee/servicereciepts/getallbyusername</url-pattern>
+  </servlet-mapping>
+
   <servlet>
     <servlet-name>GetAllTicketsServlet</servlet-name>
     <servlet-class>com.revature.Servlets.GetAllTicketsServlet</servlet-class>

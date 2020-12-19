@@ -1,23 +1,22 @@
 package com.revature.ModelLayer.Repositories.Classes;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import com.revature.ModelLayer.DTO.UserRecieptDTO;
 import com.revature.ModelLayer.Entities.RecieptEntity;
 import com.revature.ModelLayer.EntityManager.EntityMgrSingleton;
 import com.revature.ModelLayer.NamedQueries.QueryBank;
+import com.revature.ModelLayer.Repositories.Exceptions.InvalidEntityPropertyException;
 import com.revature.ModelLayer.Repositories.Interfaces.PoneRepository;
 
 //Id will be string for the stringentityrepository
 // This is because I anticiapte aI will be fetching a lot of wentities 
 //by username as ooposed to the pk
-public class ReceiptEntityRepository implements PoneRepository<Long, RecieptEntity> {
+public class ReceiptEntityRepository implements PoneRepository<Integer, RecieptEntity> {
 
     /**
      * findById returns a recieptEntity
@@ -34,7 +33,7 @@ public class ReceiptEntityRepository implements PoneRepository<Long, RecieptEnti
     }
 
     @Override
-    public RecieptEntity findById(Long id) {
+    public RecieptEntity findById(Integer id) {
         // TODO Auto-generated method stub
         RecieptEntity foundEntity = null;
         EntityTransaction txn = manager.getTransaction();
@@ -48,23 +47,13 @@ public class ReceiptEntityRepository implements PoneRepository<Long, RecieptEnti
     }
 
     /**
-     * findAllByDateAsc returns all reciepts that are persuisted to data sourjce
-     * 
-     * @return returns a Set of all entites in db
-     */
-    public Set<RecieptEntity> findAllByDateAsc() {
-        return null;
-
-    }
-
-    /**
      * deleteById deletes a reciept in the db with a matching integer id
      * 
      * @param id the pk of reciept to destory
      * @return returns true if delete succ. ozerwize false -hough hough hough
      */
     @Override
-    public boolean deleteById(Long id) {
+    public boolean deleteById(Integer id) {
         // TODO Auto-generated method stub
         boolean success = false;
         EntityTransaction txn = manager.getTransaction();
@@ -128,6 +117,52 @@ public class ReceiptEntityRepository implements PoneRepository<Long, RecieptEnti
     }
 
     /**
+     * This function udates an entity with a given id with a new status
+     * 
+     * @param ticketId the ticket id to update
+     * @param param    the int status to update the ticket to
+     * @return boolean indicating success or failure of operation
+     * @throws InvalidEntityPropertyException
+     */
+    public boolean updateTicketStatusByIdWithStatus(Integer ticketId, Integer status)
+            throws InvalidEntityPropertyException {
+        boolean success = false;
+
+        boolean invalidTicketId = ticketId == null || ticketId < 1;
+        boolean invalidStatus = status == null || status < 1;
+
+        EntityTransaction txn = manager.getTransaction();
+
+        if (!invalidStatus && !invalidTicketId) {
+            RecieptEntity entityToUpdate = this.findById(ticketId);
+
+            txn.begin();
+            if (entityToUpdate != null) {
+                entityToUpdate.setRemb_status(status);
+                manager.merge(entityToUpdate);
+            }
+            txn.commit();
+            success = true;
+        } else {
+            if (invalidStatus && invalidTicketId) {
+
+                throw new InvalidEntityPropertyException(
+                        "The application attempted to pass both an invalid ticketId and status to a RecieptEntity.");
+
+            } else if (invalidStatus) {
+                throw new InvalidEntityPropertyException(
+                        "The application attempted to pass an invalid status to a RecieptEntity.");
+
+            } else {
+                throw new InvalidEntityPropertyException(
+                        "The application attempted to pass an invalid ticketId to a RecieptEntity.");
+            }
+        }
+
+        return success;
+    }
+
+    /**
      * This function returns all list records in the database.
      * 
      * @return List<RecieptEntity> a list of all the reciepts discoverd in the
@@ -136,40 +171,24 @@ public class ReceiptEntityRepository implements PoneRepository<Long, RecieptEnti
 
     public List<RecieptEntity> getAllReciepts() {
 
-        TypedQuery<RecieptEntity> getAllRecieptsQuery = this.manager.createQuery(QueryBank.FIND_ALL_RECIEPTS,
+        TypedQuery<RecieptEntity> getAllRecieptsQuery = this.manager.createNamedQuery(QueryBank.FIND_ALL_RECIEPTS,
                 RecieptEntity.class);
         List<RecieptEntity> allRecieptsQueryResults = getAllRecieptsQuery.getResultList();
 
         return allRecieptsQueryResults;
     }
 
-    public List<RecieptEntity> getAllRecieptsByUser(String username) {
+    public List<RecieptEntity> getAllRecieptsByUser(Integer userId) {
         List<RecieptEntity> usersReciepts = null;
-        EntityTransaction entityTransaction = this.manager.getTransaction();
-        entityTransaction.begin();
 
-        if (username != null && username.length() > 0) {
+        if (userId != null && userId > 0) {
             TypedQuery<RecieptEntity> getAllRecieptsByUserQuery = manager
                     .createNamedQuery(QueryBank.FIND_ALL_RECIEPTS_BY_USERNAME, RecieptEntity.class);
+            getAllRecieptsByUserQuery.setParameter("reimb_author", userId);
             usersReciepts = getAllRecieptsByUserQuery.getResultList();
         }
-
-        entityTransaction.commit();
 
         return usersReciepts;
     }
 
-    public Boolean updateRecieptByTicketIdToNewReimbStatus(UserRecieptDTO dtoEntityToUpdateStatusFor) {
-        Boolean success = false;
-        long ticketIdDTO = dtoEntityToUpdateStatusFor.ticketNumber;
-        int newStatusForTicketIdDTO = dtoEntityToUpdateStatusFor.status;
-        RecieptEntity entity = this.findById(ticketIdDTO);
-
-        if (entity != null) {
-            entity.setRemb_id(newStatusForTicketIdDTO);
-            this.update(entity);
-        }
-
-        return success;
-    }
 }

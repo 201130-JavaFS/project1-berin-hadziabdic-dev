@@ -104,6 +104,7 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
         boolean validDTO = dto != null && dto.username != null && dto.password != null && dto.username.length() > 0
                 && dto.password.length() > 0;
         boolean validEntity = false;
+
         if (validDTO) // if dto does not have null or empty fields. I did not perform any regex
                       // checking for strong/weak passwords as it wasnt a criteria.
         {
@@ -122,10 +123,10 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
     public boolean authenticateSession(HttpServletRequest req) throws IOException {
 
         String usernameOfSessionUserFromRequest = new UserDTO(req).username;
-        HttpSession sessionObtainedFromRequet = req.getSession();
+        HttpSession sessionObtainedFromRequet = req.getSession(false);
         String sessionObjectUsernameAttribute = null;
-        Boolean authenticSession = usernameOfSessionUserFromRequest != null
-                && usernameOfSessionUserFromRequest.length() > 0 && sessionObtainedFromRequet != null;
+        Boolean authenticSession = sessionObtainedFromRequet != null && usernameOfSessionUserFromRequest != null
+                && usernameOfSessionUserFromRequest.length() > 0;
 
         if (authenticSession) {
             sessionObjectUsernameAttribute = sessionObtainedFromRequet.getAttribute(USERNAME).toString();

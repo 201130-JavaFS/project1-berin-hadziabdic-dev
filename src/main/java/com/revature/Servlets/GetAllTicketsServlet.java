@@ -32,23 +32,15 @@ public class GetAllTicketsServlet extends AbstractExceptionBoundaryHttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) {
-        boolean authenticFinanceManager = false;
+
         boolean getAllRecieptsSuccesful = false;
 
-        authenticFinanceManager = this.exceptionBoundary.ExceptionBoundaryService(req, res,
-                financeManagerSessionAuthenticatorManager);
+        getAllRecieptsSuccesful = this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
 
-        if (authenticFinanceManager) {
-            getAllRecieptsSuccesful = this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
-        }
-
-        if (res.getStatus() < 500 && authenticFinanceManager && getAllRecieptsSuccesful) {
+        if (res.getStatus() < 500 && getAllRecieptsSuccesful) {
             res.setStatus(200);
         } else {
-            if (!authenticFinanceManager)
-                res.setStatus(401);
-            else
-                res.setStatus(400);
+            res.setStatus(400);
         }
 
     }

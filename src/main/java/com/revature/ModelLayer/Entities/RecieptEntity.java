@@ -25,6 +25,7 @@ ers_reimbursment(remb_id serial primary key, reimb_amount numeric(12,2),
         @NamedQuery(name = QueryBank.FIND_ALL_RECIEPTS, query = QueryBank.FIND_ALL_RECIEPTS_JPA_QUERY),
         @NamedQuery(name = QueryBank.UPDATE_RECIEPT_STATUS, query = QueryBank.UPDATE_RECIEPT_STATUS_JPA_QUERY),
         @NamedQuery(name = QueryBank.FIND_ALL_RECIEPTS_BY_USERNAME, query = QueryBank.FIND_ALL_RECIEPTS_BY_USERNAME_JPA_QUERY) })
+
 @Entity(name = "ers_reimbursment")
 @Table(name = "ers_reimbursment")
 public class RecieptEntity {
@@ -49,9 +50,13 @@ public class RecieptEntity {
     @Column(columnDefinition = "serial")
     private Integer reimb_resolver;
     @Column(columnDefinition = "serial")
-    private int reimb_status_id;
+    private Integer reimb_status_id;
     @Column(columnDefinition = "serial")
-    private int reimb_type_id;
+    private Integer reimb_type_id;
+
+    public RecieptEntity() {
+        super();
+    }
 
     public RecieptEntity(UserRecieptDTO userTicketToCreateInDatabase) {
 
@@ -75,6 +80,10 @@ public class RecieptEntity {
         this.remb_id = remb_id;
     };
 
+    public void setRemb_status(int reimb_status) {
+        this.reimb_status_id = reimb_status;
+    }
+
     public double getReimb_amount() {
         return this.reimb_amount;
     }
@@ -95,19 +104,19 @@ public class RecieptEntity {
         return this.reimb_receipt;
     }
 
-    public int getReimb_author() {
+    public Integer getReimb_author() {
         return this.reimb_author;
     }
 
-    public int getReimb_resolver() {
+    public Integer getReimb_resolver() {
         return this.reimb_resolver;
     }
 
-    public int getReimb_status_id() {
+    public Integer getReimb_status_id() {
         return this.reimb_status_id;
     }
 
-    public int getReimb_type_id() {
+    public Integer getReimb_type_id() {
         return this.reimb_type_id;
     }
 
