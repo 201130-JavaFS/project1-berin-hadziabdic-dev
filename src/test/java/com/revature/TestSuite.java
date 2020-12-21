@@ -3,22 +3,24 @@ package com.revature;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.revature.ModelLayer.DTO.UserDTO;
 import com.revature.ModelLayer.DTO.UserRecieptDTO;
 import com.revature.ModelLayer.Entities.RecieptEntity;
-import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.ReceiptEntityRepository;
 import com.revature.ModelLayer.Repositories.Classes.UserEntityRepository;
 import com.revature.ServiceLayer.Classes.LoginAuthenticationManager;
+import com.revature.ServiceLayer.Classes.PseudoMappingService;
 import com.revature.ServiceLayer.Classes.RecieptService;
+import com.revature.ServiceLayer.Classes.ServletExceptionBoundary;
+import com.revature.Servlets.ChangeTicketStatusStateServlet;
+import com.revature.Servlets.CreateReimbursmentRequestServlet;
+import com.revature.Servlets.CreateUserServlet;
+import com.revature.Servlets.GetAllTicketsByUsernameServlet;
+import com.revature.Servlets.LoginServlet;
+import com.revature.Servlets.LogoutServlet;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 public class TestSuite {
@@ -45,14 +47,6 @@ public class TestSuite {
     }
 
     @Test
-
-    public void TestRecieptExists() {
-
-        RecieptEntity existingUser = testRepo.findById(1);
-        assertNotNull(existingUser);
-    }
-
-    @Test
     public void TestRecieptDoesNotExist() {
 
         RecieptEntity existingUser = testRepo.findById(-1);
@@ -63,13 +57,6 @@ public class TestSuite {
     public void TestEmptyList() {
 
         assertNull(testRepo.getAllRecieptsByUser(-1));
-    }
-
-    @Test
-    public void TestNotNullExistingList() {
-
-        assertNotNull(testRepo.findById(1));
-
     }
 
     @Test
@@ -220,4 +207,214 @@ public class TestSuite {
 
     }
 
+    @Test
+    public void TestGetAllTicketsServThrowException() {
+        Exception test = null;
+        GetAllTicketsByUsernameServlet getAllTicketsServletTests = new GetAllTicketsByUsernameServlet();
+
+        try {
+            getAllTicketsServletTests.service(null, null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+    }
+
+    @Test
+    public void TestLoginServletThrowsException() {
+        Exception test = null;
+        LoginServlet loginServlet = new LoginServlet();
+
+        try {
+            loginServlet.service(null, null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+    }
+
+    @Test
+    public void TestLogoutServletThrowsException() {
+        Exception test = null;
+        LogoutServlet logOut = new LogoutServlet();
+
+        try {
+            logOut.service(null, null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+    }
+
+    @Test
+    public void TestCreateUserServletThrowsException() {
+        Exception test = null;
+        CreateUserServlet createUserTestServlet = new CreateUserServlet();
+
+        try {
+            createUserTestServlet.service(null, null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+    }
+
+    @Test
+    public void TestGetAllTIcketsByUsernameServletThrowsException() {
+        Exception test = null;
+        GetAllTicketsByUsernameServlet createUserTestServlet = new GetAllTicketsByUsernameServlet();
+
+        try {
+            createUserTestServlet.service(null, null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+    }
+
+    @Test
+    public void TestCreateReimbRequestServletThrowsException() {
+        Exception test = null;
+        CreateReimbursmentRequestServlet createReimbRequestServlet = new CreateReimbursmentRequestServlet();
+
+        try {
+            createReimbRequestServlet.service(null, null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+    }
+
+    @Test
+    public void TestChangeTicketStatusStateServletThrowsException() {
+        Exception test = null;
+        ChangeTicketStatusStateServlet changeStatusStateServletThrowsException = new ChangeTicketStatusStateServlet();
+
+        try {
+            changeStatusStateServletThrowsException.service(null, null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+    }
+
+    @Test
+    public void TestExceptionBoundaryThrowsExceptionOnNullReqResPair() {
+        Exception test = null;
+        ServletExceptionBoundary boundary = new ServletExceptionBoundary();
+
+        try {
+            boundary.ExceptionBoundaryService(null, null, null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+
+    }
+
+    @Test
+    public void TestPseudoMappingServiceOnNullListMappingThrowsException() {
+        Exception test = null;
+
+        try {
+            PseudoMappingService.MapRecieptEntityListToDtoList(null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+
+    }
+
+    @Test
+    public void TestPseudoMappingServiceOnNullHttpServletRequestIdFetchThrowsException() {
+        Exception test = null;
+
+        try {
+            PseudoMappingService.getErsIdFromHttpSession(null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+
+    }
+
+    @Test
+    public void TestPseudoMappingServiceOnNullReimbIdFetchThrowsException() {
+        Exception test = null;
+
+        try {
+            PseudoMappingService.getReimbStringFromId(null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+
+    }
+
+    @Test
+    public void TestPseudoMappingServiceOnNullUserRoleFetchFromNulLSessionThrowsException() {
+        Exception test = null;
+
+        try {
+            PseudoMappingService.getUserRoleFromHttpSession(null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+
+    }
+
+    @Test
+    public void TestGetUserRoleRoleFromNullHttpSessionReturnsNull() {
+        Exception test = null;
+
+        try {
+            PseudoMappingService.getUserRoleFromHttpSession(null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+
+    }
+
+    @Test
+    public void TestPseudoMappingServiceOnNullTimeStampThrowsNoException() {
+        Exception test = null;
+
+        try {
+            PseudoMappingService.getDateStringFromSqlTimeStamp(null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNull(test);
+        }
+
+    }
+
+    @Test
+    public void TestPseudoMappingOnNullUsernamThrowsException() {
+        Exception test = null;
+
+        try {
+            PseudoMappingService.getUsernameFromHttpSession(null);
+        } catch (Exception e) {
+            test = e;
+        } finally {
+            assertNotNull(test);
+        }
+
+    }
 }
