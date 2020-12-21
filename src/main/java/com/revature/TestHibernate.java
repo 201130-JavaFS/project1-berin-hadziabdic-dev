@@ -1,15 +1,23 @@
 package com.revature;
 
+import java.io.File;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import com.ibm.icu.text.DecimalFormat;
 import com.revature.ModelLayer.DTO.UserRecieptDTO;
 import com.revature.ModelLayer.Entities.RecieptEntity;
+import com.revature.ModelLayer.Entities.RecieptStatusEntity;
 import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.ReceiptEntityRepository;
 import com.revature.ModelLayer.Repositories.Classes.UserEntityRepository;
 
+import org.apache.commons.math3.util.Precision;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 public class TestHibernate {
 
@@ -17,20 +25,9 @@ public class TestHibernate {
 
         try {
 
-            UserEntityRepository repo = new UserEntityRepository();
+            double d = 12.333444;
+            double answer = 5.0;
 
-            UserRecieptDTO urd = new UserRecieptDTO();
-            urd.amount = 999.12;
-            urd.description = "hi from tester";
-            urd.requestedBy = 10;
-            urd.dateSubmitted = new Timestamp(System.currentTimeMillis());
-            urd.type = 1;
-
-            RecieptEntity re = new RecieptEntity(urd);
-            ReceiptEntityRepository rep = new ReceiptEntityRepository();
-            rep.create(re);
-
-            int x = 4;
         } catch (Exception e) {
             System.out.println("EXCEPTION " + e.getMessage());
         }

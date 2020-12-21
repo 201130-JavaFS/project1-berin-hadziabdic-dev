@@ -3,6 +3,7 @@ package com.revature.ModelLayer.DTO;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -17,6 +18,8 @@ public class UserDTO {
     public String username;
     public String password;
     public String email;
+
+    private static ObjectMapper jsonWriter = new ObjectMapper();
 
     public UserDTO() {
         super();
@@ -34,6 +37,14 @@ public class UserDTO {
             this.password = parsedDTO.password;
             this.email = parsedDTO.email;
         }
+
+    }
+
+    public void WriteSelfAsJsonTokenToRequest(HttpServletResponse response) throws IOException {
+
+        String selfAsJsonString = jsonWriter.writeValueAsString(this);
+
+        response.getWriter().write(selfAsJsonString);
 
     }
 

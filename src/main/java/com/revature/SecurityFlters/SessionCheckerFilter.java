@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.revature.ModelLayer.DTO.UserDTO;
+
 /**
  * This filter ensures that a user accessing a resource requiring authentication
  * is assigned a vald session.
@@ -35,7 +37,6 @@ public class SessionCheckerFilter extends HttpFilter {
         // TODO Auto-generated method stub
         // Get session from request, but do not create one if one does not exist.
         HttpSession jSession = request.getSession(false);
-
         if (sessionCheck(jSession))
             chain.doFilter(request, response);
         else

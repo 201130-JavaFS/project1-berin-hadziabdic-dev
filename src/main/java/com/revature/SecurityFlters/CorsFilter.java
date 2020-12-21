@@ -2,17 +2,18 @@ package com.revature.SecurityFlters;
 
 import java.io.IOException;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpFilter;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * This is a cors filter which I am sampling (I am quite a scientist) from our
  * demos into my application.
  */
-public class CorsFilter extends HttpFilter {
+public class CorsFilter implements Filter {
 
     /*
      * The idea of a Filter, is that before the request is delegated to a Servlet,
@@ -26,7 +27,7 @@ public class CorsFilter extends HttpFilter {
      * them before they even reach a Servlet
      */
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
         System.out.println("CORS Filter leveraged");

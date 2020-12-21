@@ -5,6 +5,7 @@ import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,7 +47,9 @@ public class LoginAuthenticationManager implements WebService<Boolean> {
                 HttpSession userSession = req.getSession(true);
                 userSession.setAttribute(USERNAME, loginData.username);
                 userSession.setAttribute("ers_users_id", logInUserData.getErs_users_id().toString());
+                userSession.setAttribute("role", logInUserData.getUser_role_id());
                 userSession.setMaxInactiveInterval(86400); // sessions last a day.
+
             }
             return authenticated;
         };

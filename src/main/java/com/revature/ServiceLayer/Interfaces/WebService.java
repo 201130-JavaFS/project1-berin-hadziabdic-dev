@@ -10,6 +10,7 @@ import com.revature.ModelLayer.DTO.Exceptions.InvalidEntityToDTOConversionExcept
 import com.revature.ModelLayer.Repositories.Exceptions.InvalidEntityPropertyException;
 import com.revature.ServiceLayer.Exceptions.FilterFoundNoAuthenticationHandlerForAuthenticatedResourceException;
 import com.revature.ServiceLayer.Exceptions.InvalidHttpSessionStateException;
+import com.revature.ServiceLayer.Exceptions.InvalidPropertyValueException;
 import com.revature.ServiceLayer.Exceptions.NullHttpSessionException;
 
 public interface WebService<ReturnType> {
@@ -17,6 +18,6 @@ public interface WebService<ReturnType> {
     public ReturnType webServe(HttpServletRequest req, HttpServletResponse res)
             throws IOException, InvalidEntityToDTOConversionException, NullHttpSessionException,
             InvalidHttpSessionStateException, FilterFoundNoAuthenticationHandlerForAuthenticatedResourceException,
-            IncompleteOrInvalidUserDTOException, InvalidEntityPropertyException;
+            IncompleteOrInvalidUserDTOException, InvalidEntityPropertyException, InvalidPropertyValueException;
 
 }

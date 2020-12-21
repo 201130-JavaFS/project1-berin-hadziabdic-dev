@@ -6,19 +6,16 @@
   </welcome-file-list>
 
 
-  <!-- FILTERS ************************************************************************************************************8 -->
   <filter>
-    <display-name>JsonFilter</display-name>
-    <filter-name>JsonFilter</filter-name>
-    <filter-class>
-      com.revature.SecurityFlters.JsonFilter
-    </filter-class>
+    <filter-name>Cors</filter-name>
+    <filter-class>com.revature.SecurityFlters.CorsFilter</filter-class>
   </filter>
 
   <filter-mapping>
-    <filter-name>JsonFilter</filter-name>
-    <url-pattern>/apiroot/*</url-pattern>
+    <filter-name>Cors</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
+
   <filter>
     <display-name>SessionCheckerFilter</display-name>
     <filter-name>
@@ -42,14 +39,6 @@
     <url-pattern>/apiroot/user/financemanager/*</url-pattern>
   </filter-mapping>
 
-  <filter>
-    <filter-name>CorsFilter</filter-name>
-    <filter-class>com.revature.SecurityFilters.CorsFIlter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>CorsFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
 
   <!-- SERVLETS  **************************************************************************************************** -->
 
@@ -60,7 +49,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
-    <url-pattern>/apiroot/user/login</url-pattern>
+    <url-pattern>/apiroot/login</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -69,7 +58,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>LogoutServlet</servlet-name>
-    <url-pattern>/apiroot/user/logout</url-pattern>
+    <url-pattern>/apiroot/logout</url-pattern>
   </servlet-mapping>
 
   <servlet>

@@ -13,7 +13,8 @@ import com.revature.ModelLayer.DTO.Exceptions.IncompleteOrInvalidUserDTOExceptio
 import com.revature.ModelLayer.NamedQueries.QueryBank;
 
 @NamedQueries({ @NamedQuery(name = QueryBank.FIND_BY_USERNAME, query = QueryBank.FIND_BY_USERNAME_JPA_QUERY),
-        @NamedQuery(name = QueryBank.DELETE_BY_USERNAME, query = QueryBank.DELETE_BY_USERNAME_JPA_QUERY), })
+        @NamedQuery(name = QueryBank.DELETE_BY_USERNAME, query = QueryBank.DELETE_BY_USERNAME_JPA_QUERY),
+        @NamedQuery(name = QueryBank.FIND_BY_ERS_ID, query = QueryBank.FIND_BY_ERS_ID_JPA_QUERY) })
 
 @Entity(name = "ers_users")
 @Table(name = "ers_users")

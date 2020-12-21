@@ -26,7 +26,7 @@ public class CreateReimbursmentRequestServlet extends AbstractExceptionBoundaryH
         success = this.exceptionBoundary.ExceptionBoundaryService(req, res, recieptService);
 
         if (success)
-            res.setStatus(200);
+            res.setStatus(205);
         else if (res.getStatus() < 500)
             res.setStatus(400);
 

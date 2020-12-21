@@ -1,5 +1,6 @@
 package com.revature.ModelLayer.Repositories.Classes;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,6 +8,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.revature.ModelLayer.DTO.UserRecieptDTO;
 import com.revature.ModelLayer.Entities.RecieptEntity;
 import com.revature.ModelLayer.EntityManager.EntityMgrSingleton;
 import com.revature.ModelLayer.NamedQueries.QueryBank;
@@ -124,27 +126,33 @@ public class ReceiptEntityRepository implements PoneRepository<Integer, RecieptE
      * @return boolean indicating success or failure of operation
      * @throws InvalidEntityPropertyException
      */
-    public boolean updateTicketStatusByIdWithStatus(Integer ticketId, Integer status)
+    public boolean updateTicketStatusByIdWithStatus(UserRecieptDTO updateReciept)
             throws InvalidEntityPropertyException {
         boolean success = false;
 
+        Integer ticketId = updateReciept.ticketNumber;
+        Integer status = updateReciept.status;
+        Integer processedBy = updateReciept.processedBy;
+
         boolean invalidTicketId = ticketId == null || ticketId < 1;
         boolean invalidStatus = status == null || status < 1;
-
+        boolean invalidProcessor = processedBy == null || processedBy <= 0;
         EntityTransaction txn = manager.getTransaction();
 
-        if (!invalidStatus && !invalidTicketId) {
+        if (!invalidStatus && !invalidTicketId && !invalidProcessor) {
             RecieptEntity entityToUpdate = this.findById(ticketId);
 
             txn.begin();
             if (entityToUpdate != null) {
                 entityToUpdate.setRemb_status(status);
+                entityToUpdate.setReimb_resolver(processedBy);
+                entityToUpdate.setReimb_resolved();
                 manager.merge(entityToUpdate);
             }
             txn.commit();
             success = true;
         } else {
-            if (invalidStatus && invalidTicketId) {
+            if (invalidStatus && invalidTicketId && invalidProcessor) {
 
                 throw new InvalidEntityPropertyException(
                         "The application attempted to pass both an invalid ticketId and status to a RecieptEntity.");
@@ -153,6 +161,9 @@ public class ReceiptEntityRepository implements PoneRepository<Integer, RecieptE
                 throw new InvalidEntityPropertyException(
                         "The application attempted to pass an invalid status to a RecieptEntity.");
 
+            } else if (invalidProcessor) {
+                throw new InvalidEntityPropertyException(
+                        "The application attempted to pass an invalid ticket processor to a RecieptEntity.");
             } else {
                 throw new InvalidEntityPropertyException(
                         "The application attempted to pass an invalid ticketId to a RecieptEntity.");

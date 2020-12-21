@@ -5,6 +5,9 @@ public final class QueryBank {
     public static final String FIND_BY_USERNAME = "findByUsername";
     public static final String FIND_BY_USERNAME_JPA_QUERY = "select user from ers_users as user where user.ers_username  = :ers_username";
 
+    public static final String FIND_BY_ERS_ID = "findByErsId";
+    public static final String FIND_BY_ERS_ID_JPA_QUERY = "from ers_users as user where user.ers_users_id= :ers_users_id";
+
     public static final String DELETE_BY_USERNAME = "deleteByUsername";
     public static final String DELETE_BY_USERNAME_JPA_QUERY = "delete from ers_users e where e.ers_username = :ers_username";
 

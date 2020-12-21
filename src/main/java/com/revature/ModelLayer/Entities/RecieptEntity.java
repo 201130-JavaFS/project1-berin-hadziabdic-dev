@@ -1,14 +1,20 @@
 package com.revature.ModelLayer.Entities;
 
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.revature.ModelLayer.DTO.UserRecieptDTO;
@@ -31,7 +37,8 @@ ers_reimbursment(remb_id serial primary key, reimb_amount numeric(12,2),
 public class RecieptEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(insertable = true, updatable = false)
     private Integer remb_id;
 
     @Column(columnDefinition = "numeric(10,2)")
@@ -61,7 +68,7 @@ public class RecieptEntity {
     public RecieptEntity(UserRecieptDTO userTicketToCreateInDatabase) {
 
         this.reimb_amount = userTicketToCreateInDatabase.amount;
-        this.reimb_submitted = null;
+        this.reimb_submitted = userTicketToCreateInDatabase.dateSubmitted;
         this.reimb_resolved = null;
         this.reimb_description = userTicketToCreateInDatabase.description;
         this.reimb_receipt = null; // added ticket later.
@@ -73,6 +80,7 @@ public class RecieptEntity {
     }
 
     public int getRemb_id() {
+
         return this.remb_id;
     }
 
@@ -96,6 +104,10 @@ public class RecieptEntity {
         return this.reimb_resolved;
     }
 
+    public void setReimb_resolved() {
+        this.reimb_resolved = new Timestamp(System.currentTimeMillis());
+    }
+
     public String getReimb_description() {
         return this.reimb_description;
     }
@@ -112,11 +124,16 @@ public class RecieptEntity {
         return this.reimb_resolver;
     }
 
+    public void setReimb_resolver(Integer resolver) {
+        this.reimb_resolver = resolver;
+    }
+
     public Integer getReimb_status_id() {
         return this.reimb_status_id;
     }
 
     public Integer getReimb_type_id() {
+
         return this.reimb_type_id;
     }
 

@@ -21,7 +21,7 @@ public class GetAllTicketsByUsernameServlet extends AbstractExceptionBoundaryHtt
     private static final long serialVersionUID = 1L;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) {
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) {
 
         boolean success = false;
 

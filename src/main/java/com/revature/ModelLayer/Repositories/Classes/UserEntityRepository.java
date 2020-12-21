@@ -25,6 +25,23 @@ public class UserEntityRepository implements PoneRepository<String, UserEntity> 
         manager = new EntityMgrSingleton().GetSingleton();
     }
 
+    public String getUsernameFromId(Integer userId) {
+        UserEntity discoveredUser = null;
+        EntityTransaction txn = manager.getTransaction();
+        String username = null;
+
+        if (userId != null && userId > 0) {
+
+            TypedQuery<UserEntity> matchingUser = manager.createNamedQuery(QueryBank.FIND_BY_ERS_ID, UserEntity.class);
+            matchingUser.setParameter("ers_users_id", userId);
+            discoveredUser = matchingUser.getSingleResult();
+            username = discoveredUser.getErs_username();
+        }
+
+        return username;
+
+    }
+
     @Override
     public UserEntity findById(String id) {
         // TODO Auto-generated method stub

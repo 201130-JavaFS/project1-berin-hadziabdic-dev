@@ -14,7 +14,6 @@ import com.revature.ServiceLayer.Interfaces.WebService;
 public class GetAllTicketsServlet extends AbstractExceptionBoundaryHttpServlet {
 
     private static WebService<Boolean> recieptService = new RecieptService();
-    private static WebService<Boolean> financeManagerSessionAuthenticatorManager = new LoginAuthenticationManager();
     /**
      *
      */
