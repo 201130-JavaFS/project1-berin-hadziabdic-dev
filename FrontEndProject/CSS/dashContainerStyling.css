@@ -1,0 +1,24 @@
+.dash-container-row {
+  background-color: whitesmoke;
+}
+
+.dash-container {
+  border: 1px solid #be9e9e;
+  padding-top: 50px;
+  position: relative;
+  width: 80vw;
+
+  max-height: 80vh;
+  overflow: scroll;
+}
+.dash-container-nav {
+  height: 50px;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+}
+
+.dash-table {
+  min-width: 1000px;
+  width: 1000px;
+}

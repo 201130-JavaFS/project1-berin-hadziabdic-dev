@@ -15,7 +15,6 @@ import com.revature.ModelLayer.Repositories.Classes.ReceiptEntityRepository;
 import com.revature.ModelLayer.Repositories.Classes.UserEntityRepository;
 import com.revature.ServiceLayer.Classes.CreateUserService;
 
-import org.apache.commons.math3.util.Precision;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class ProgrammaticSetup {

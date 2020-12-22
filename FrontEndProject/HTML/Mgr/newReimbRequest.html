@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Berin" />
+    <title>ERS Employee Tickets</title>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../Scripts/ReimbReq.js"></script>
+    <script src="../../Scripts/LogOut.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap"
+      rel="stylesheet"
+    />
+    <link href="../../CSS/loginStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../CSS/fonts.css" type="text/css" rel="stylesheet" />
+    <link href="../../CSS/globalStyle.css" type="text/css" rel="stylesheet" />
+    <link
+      href="../../CSS/dashContainerStyling.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../CSS/renderTableStyling.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="d-flex flex-column justify-content-center">
+    <nav class="navbar d-flex flex-row bg-white shadow-lg bg-white fixed-top">
+      <div>
+        <span class="lambo-yellow-text">Hello,</span>
+        <span class="purple-red-text" id="username-span"
+          >Just some test text</span
+        >
+      </div>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a
+            class="btn btn-warning text-white"
+            role="button"
+            onclick="logOutMgr();"
+            >Log Out</a
+          >
+        </li>
+      </ul>
+    </nav>
+        <section class="container dash-container bg-white">
+          <nav class="navbar navbar-expand">
+            <a class="navbar-brand" href="#">New Reimbursment Request Form</a>
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="./employeeDash.html"> Past and Pending Requests</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./ViewAllEmployeeRequests.html">Approve/Deny Requests</a>
+              </li>
+            </ul>
+          </nav>
+          <div class ="form-row">
+            <span id="server-results" class="col-8 mr-auto text-primary">Please enter the expense reimbursment you'd like to write off.</span>
+          </div>
+          <div class="dash-container-row form-row mb-2">
+              <div class="form-group col-12 col-md-6">
+                <label for="description">Amount</label>
+                <input id="amount" type="number" min="0" value="0.00"  step=".01" class="form-control" />"
+              </div>
+            <div class="form-group  col-12 col-md-6"">
+                <label for="description">Type</label>
+                <select class="form-control">
+                    <option value="LODGING"n>Lodging</option>
+                    <option value="TRAVEL">Travel</option>
+                    <option value="FOOD">Food</option>
+                    <option value="OTHER">Other</option>
+                </select>
+            </div>   
+          <div class="form-group col-12 col-md-6">
+              <label for="description">Description</label>
+              <textarea class="form-control" name="description" id="description"></textarea>
+          </div>
+          <div class="form-group col-12 col-md-6 ">
+            <label for="description">Upload Reciept Image</label>
+            <br>
+           <input class="" type="file" id="file-image" id="file" />
+        </div>
+          <div class="col-12"></div>
+          <div class="form-group ml-auto col-md-4">
+              <input id="submit-employee-request-button" type="button" class="btn btn-outline-success form-control " value="submit request" onclick="submitTicket()" />
+          </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
