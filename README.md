@@ -11,7 +11,7 @@ But, I can't get it fully CORS compatible, and I think it has something to deal 
 
 ##Update
 Fixed cors issue during break: All s3 requests orignate from : s3-us-west-2.amazonaws.com; adding this to cors filter allowed app to be usable without extensions! :D 
-I do not know if it is compatible with chrome. 
+I do not know if it is compatible with chrome. I did test with firefox both on phone and laptop, and I had no issues. On my phone, it did not work on Chrome. You could login and traverse through the site, from what I could tell. I did not , however, check/uncheck the settings covered in training for firefox in my mobile browser. In any case, should be available on FF, abd probably some other browsers as well.
 
 You might need to reload it twice to get the best font ever since I think the page loads before the google fonts do sometimes.
 
