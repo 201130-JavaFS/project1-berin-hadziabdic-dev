@@ -6,8 +6,11 @@ Greetings Tim,
 
 I managed to put my stuff up on Ec2: http://www.projectone.com.s3-website-us-west-2.amazonaws.com/
 
+##OutOfDateInfo
 But, I can't get it fully CORS compatible, and I think it has something to deal with S3.  without the use of a firefox extension: https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/.
 
+##Update
+Fixed cors issue during break: All s3 requests orignate from : s3-us-west-2.amazonaws.com; adding this to cors filter allowed app to be usable without extensions! :D 
 I do not know if it is compatible with chrome. 
 
 You might need to reload it twice to get the best font ever since I think the page loads before the google fonts do sometimes.
