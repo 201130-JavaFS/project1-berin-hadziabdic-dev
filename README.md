@@ -1,5 +1,22 @@
 # Employee Reimbursment System (ERS)
 
+## Notes To Sir Timothy
+
+Greetings Tim, 
+
+I managed to put my stuff up on Ec2: http://www.projectone.com.s3-website-us-west-2.amazonaws.com/
+
+But, I can't get it fully CORS compatible, and I think it has something to deal with S3.  without the use of a firefox extension: https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/. If you install it and activate, you can test it our yourself. There's two users employee and financemanager, and both of them share the same password as their respective usernames.
+
+The app is connected to an RDS db instance. 
+
+And, tomcat is running inside of docker on ec2 on port 8088.
+
+The tomcat cors filter is also configured for S3 and the html files are also configured for S3. If you'd like to test these on your local machine, let me know and I can just change the cors filter setting as well as some javascript in the front end and you'll be good to go. 
+
+Lastly, my service layer highly depends on HttpServletRequest and HttpServletResponse due to an interface I used. I could not test this in any meaningful way, as I would need to do what tomcat has done and implement these two abstract classes. That said I did run quite a few tests on the things I could, and I did reach over 70% on my repo layer which was the next best thing. All my authentication logic is also completing using HttpServletRequest/HttpServlet responses or Filters for session authentication which also use the same classes.
+
+
 ## Executive Summary
 The Expense Reimbursement System (ERS) will manage the process of reimbursing employees for expenses incurred while on company time. All employees in the company can login and submit requests for reimbursement and view their past tickets and pending requests. Finance managers can log in and view all reimbursement requests and past history for all employees in the company. Finance managers are authorized to approve and deny requests for expense reimbursement.
 
