@@ -8,9 +8,11 @@ I managed to put my stuff up on Ec2: http://www.projectone.com.s3-website-us-wes
 
 But, I can't get it fully CORS compatible, and I think it has something to deal with S3.  without the use of a firefox extension: https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/.
 
+I do not know if it is compatible with chrome. 
+
 You might need to reload it twice to get the best font ever since I think the page loads before the google fonts do sometimes.
 
-If you install it and activate, you can test it our yourself. There's two users employee and financemanager, and both of them share the same password as their respective usernames.
+If you install and activate the plug in, you can test it our yourself. There's two users employee and financemanager, and both of them share the same password as their respective usernames.
 
 The app is connected to an RDS db instance. 
 
