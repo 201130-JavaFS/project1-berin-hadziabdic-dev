@@ -27,7 +27,6 @@ public class UserEntityRepository implements PoneRepository<String, UserEntity> 
 
     public String getUsernameFromId(Integer userId) {
         UserEntity discoveredUser = null;
-        EntityTransaction txn = manager.getTransaction();
         String username = null;
 
         if (userId != null && userId > 0) {
@@ -83,19 +82,7 @@ public class UserEntityRepository implements PoneRepository<String, UserEntity> 
     @Override
     public boolean update(UserEntity entity) {
         // TODO Auto-generated method stub
-        EntityTransaction txn = manager.getTransaction();
-        boolean success = false;
-
-        txn.begin();
-
-        if (entity != null) {
-            manager.refresh(entity);
-            success = true;
-        }
-
-        txn.commit();
-
-        return success;
+        return true;
     }
 
     @Override

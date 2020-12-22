@@ -3,10 +3,15 @@ package com.revature;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.sql.Timestamp;
+import java.util.Date;
 
 import com.revature.ModelLayer.DTO.UserDTO;
 import com.revature.ModelLayer.DTO.UserRecieptDTO;
 import com.revature.ModelLayer.Entities.RecieptEntity;
+import com.revature.ModelLayer.Entities.UserEntity;
 import com.revature.ModelLayer.Repositories.Classes.ReceiptEntityRepository;
 import com.revature.ModelLayer.Repositories.Classes.UserEntityRepository;
 import com.revature.ServiceLayer.Classes.LoginAuthenticationManager;
@@ -414,6 +419,60 @@ public class TestSuite {
             test = e;
         } finally {
             assertNotNull(test);
+        }
+
+    }
+
+    @Test
+    public void TestCreateUser() {
+        UserDTO userToTest = new UserDTO();
+        userToTest.username = new Date().toString();
+        userToTest.password = "testpassword";
+        userToTest.email = "userEmail@" + userToTest.username;
+
+        UserEntity tEntity = new UserEntity();
+        assertTrue(this.userTestRepo.create(tEntity));
+
+    }
+
+    @Test
+    public void TestFindUser() {
+
+        assertNotNull(userTestRepo.findById("employee"));
+    }
+
+    @Test
+    public void TestDeleteDNEUser() {
+
+        assertNotNull(userTestRepo.deleteById("doesNotExist"));
+    }
+
+    @Test
+    public void TestUpdateRecieptWithValidDTO() {
+        Exception t = null;
+        UserRecieptDTO dto = new UserRecieptDTO();
+        dto.status = 2;
+        dto.processedBy = 2;
+        dto.ticketNumber = 2;
+        try {
+            this.testRepo.updateTicketStatusByIdWithStatus(dto);
+        } catch (Exception e) {
+            t = e;
+        } finally {
+            assertNull(t);
+        }
+
+    }
+
+    public void TestDeleteReciept() {
+
+        Exception t = null;
+        try {
+            this.testRepo.deleteById(1000);
+        } catch (Exception e) {
+            t = e;
+        } finally {
+            assertNotNull(t);
         }
 
     }
