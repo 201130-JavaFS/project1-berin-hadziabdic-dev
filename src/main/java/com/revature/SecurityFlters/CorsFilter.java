@@ -44,9 +44,10 @@ public class CorsFilter implements Filter {
 
         // res.setHeader("Access-Control-Allow-Origin", "*"); // Allow
 
-        res.setHeader("Access-Control-Allow-Origin", "http://www.projectone.com.s3-website-us-west-2.amazonaws.com"); // Allow
-                                                                                                                      // all
-                                                                                                                      // origins
+        res.setHeader("Access-Control-Allow-Origin",
+                "http://www.projectone.com.s3-website-us-west-2.amazonaws.com , http://s3-us-west-2.amazonaws.com/www.projectone.com/HTML/newReimbRequest.html"); // Allow
+        // all
+        // origins
 
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         // Allow specific HTTP Verbs
