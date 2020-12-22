@@ -44,7 +44,7 @@ public class CorsFilter implements Filter {
 
         // res.setHeader("Access-Control-Allow-Origin", "*"); // Allow
 
-        res.setHeader("Access-Control-Allow-Origin", "https://s3-us-west-2.amazonaws.com/www.projectone.com"); // Allow
+        res.setHeader("Access-Control-Allow-Origin", "http://s3-us-west-2.amazonaws.com/www.projectone.com"); // Allow
 
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         // Allow specific HTTP Verbs
