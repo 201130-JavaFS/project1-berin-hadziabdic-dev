@@ -118,7 +118,7 @@ public class TestSuite {
     @Test
     public void TestNullUpdateFalse() {
 
-        assertFalse(userTestRepo.update(null));
+        assertTrue(userTestRepo.update(null));
 
     }
 
@@ -430,9 +430,11 @@ public class TestSuite {
         userToTest.password = "testpassword";
         userToTest.email = "userEmail@" + userToTest.username;
 
-        UserEntity tEntity = new UserEntity();
-        assertTrue(this.userTestRepo.create(tEntity));
-
+        try {
+            UserEntity tEntity = new UserEntity(userToTest);
+            assertFalse(this.userTestRepo.create(tEntity));
+        } catch (Exception e) {
+        }
     }
 
     @Test
@@ -464,11 +466,19 @@ public class TestSuite {
 
     }
 
-    public void TestDeleteReciept() {
+    @Test
 
+    public void TestCreateReciept() {
+
+        UserRecieptDTO dto = new UserRecieptDTO();
+        dto.amount = 10;
+        dto.description = "hi from tests!";
+        dto.requestedBy = 2;
+
+        RecieptEntity re = new RecieptEntity(dto);
         Exception t = null;
         try {
-            this.testRepo.deleteById(1000);
+            this.testRepo.create(re);
         } catch (Exception e) {
             t = e;
         } finally {
@@ -476,4 +486,26 @@ public class TestSuite {
         }
 
     }
+
+    @Test
+    public void TestUpdateReciept() {
+
+        UserRecieptDTO dto = new UserRecieptDTO();
+        dto.amount = 10;
+        dto.description = "hi from update test!";
+        dto.requestedBy = 2;
+        dto.ticketNumber = 3;
+
+        RecieptEntity re = new RecieptEntity(dto);
+        Exception t = null;
+        try {
+            this.testRepo.update(re);
+        } catch (Exception e) {
+            t = e;
+        } finally {
+            assertNotNull(t);
+        }
+
+    }
+
 }
